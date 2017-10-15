@@ -738,13 +738,10 @@ declare module 'webdnn/webgl_handler' {
 	    bindVertexArray(vao: WebGLVertexArrayObject): void;
 	    deleteTexture(texture: WebGLTexture): void;
 	    static initializeWebGL2Context(canvas?: HTMLCanvasElement): WebGLRenderingContext | null;
-	    static initializeWebGL1Context(canvas?: HTMLCanvasElement): {
-	        gl: WebGLRenderingContext;
-	        vao: WebGLVertexArrayObjectExtension;
-	    } | null;
+	    static initializeWebGL1Context(canvas?: HTMLCanvasElement): WebGLRenderingContext | null;
 	    static initializeContext(): {
 	        gl: WebGLRenderingContext;
-	        vao: WebGLVertexArrayObjectExtension | null;
+	        vao: null;
 	    } | null;
 	    /**
 	     * Check whether WebGL is supported or not

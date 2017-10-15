@@ -1337,8 +1337,7 @@ var WebGLHandler = (function () {
     WebGLHandler.initializeWebGL1Context = function (canvas) {
         if (canvas === void 0) { canvas = document.createElement('canvas'); }
         var gl;
-        var vao;
-        gl = (canvas.getContext('webgl') || canvas.getContext('webgl-experimental'));
+        gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
         if (!gl)
             return null;
         if (!gl.getExtension('OES_texture_float'))
@@ -1349,11 +1348,10 @@ var WebGLHandler = (function () {
             // currently when WebGLRenderingContext#readPixels is called, an error is thrown.
             return null;
         }
-        if (!(vao = gl.getExtension('OES_vertex_array_object')))
-            return null;
+        // if (!(vao = gl.getExtension('OES_vertex_array_object'))) return null;
         if (isDebugMode() && !gl.getExtension('WEBGL_debug_renderer_info'))
             return null;
-        return { gl: gl, vao: vao };
+        return gl;
     };
     WebGLHandler.initializeContext = function () {
         var canvas = document.createElement('canvas');
@@ -1365,10 +1363,8 @@ var WebGLHandler = (function () {
                 console.info('WebGL2 is enabled');
         }
         else {
-            var res = WebGLHandler.initializeWebGL1Context(canvas);
-            if (res) {
-                gl = res.gl;
-                vao = res.vao;
+            gl = WebGLHandler.initializeWebGL1Context(canvas);
+            if (gl) {
                 if (isDebugMode())
                     console.info('WebGL2 is disabled');
             }
@@ -2058,12 +2054,10 @@ var DescriptorRunnerWebGL = (function (_super) {
                     }
                 });
                 // vao
-                var vao = _this.handler.createVertexArray();
-                _this.handler.bindVertexArray(vao);
+                // let vao = this.handler.createVertexArray();
+                // this.handler.bindVertexArray(vao);
                 // attributes
-                var loc = gl.getAttribLocation(program, '_xy');
-                gl.vertexAttribPointer(loc, 2, gl.FLOAT, true, 8, 0);
-                gl.enableVertexAttribArray(loc);
+                var xyAttribLoc = gl.getAttribLocation(program, '_xy');
                 // run
                 return {
                     program: program,
@@ -2073,7 +2067,7 @@ var DescriptorRunnerWebGL = (function (_super) {
                     height: output.textureHeight,
                     inputs: inputs,
                     output: output,
-                    vao: vao,
+                    xyAttribLoc: xyAttribLoc,
                     uniforms: uniforms,
                     disposable: []
                 };
@@ -2135,7 +2129,6 @@ var DescriptorRunnerWebGL = (function (_super) {
                         if (!(_b < _c.length)) return [3 /*break*/, 17];
                         runtimeProgramInfo = _c[_b];
                         start = performance.now();
-                        this.handler.bindVertexArray(runtimeProgramInfo.vao);
                         this.handler.bindFrameBuffer(runtimeProgramInfo.frameBuffer, runtimeProgramInfo.width, runtimeProgramInfo.height);
                         _d = 0, _e = runtimeProgramInfo.inputs;
                         _x.label = 6;
@@ -2159,6 +2152,9 @@ var DescriptorRunnerWebGL = (function (_super) {
                             uniform = _h[_g];
                             uniform.func.apply(gl, uniform.args);
                         }
+                        // attribute
+                        gl.vertexAttribPointer(runtimeProgramInfo.xyAttribLoc, 2, gl.FLOAT, true, 8, 0);
+                        gl.enableVertexAttribArray(runtimeProgramInfo.xyAttribLoc);
                         // run
                         gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexArray.length / 2);
                         return [4 /*yield*/, this.handler.waitForComplete()];
@@ -2220,7 +2216,6 @@ var DescriptorRunnerWebGL = (function (_super) {
                     case 19:
                         if (!(_l < _m.length)) return [3 /*break*/, 25];
                         runtimeProgramInfo = _m[_l];
-                        this.handler.bindVertexArray(runtimeProgramInfo.vao);
                         this.handler.bindFrameBuffer(runtimeProgramInfo.frameBuffer, runtimeProgramInfo.width, runtimeProgramInfo.height);
                         _o = 0, _p = runtimeProgramInfo.inputs;
                         _x.label = 20;
@@ -2244,6 +2239,9 @@ var DescriptorRunnerWebGL = (function (_super) {
                             uniform = _s[_r];
                             uniform.func.apply(gl, uniform.args);
                         }
+                        // attribute
+                        gl.vertexAttribPointer(runtimeProgramInfo.xyAttribLoc, 2, gl.FLOAT, true, 8, 0);
+                        gl.enableVertexAttribArray(runtimeProgramInfo.xyAttribLoc);
                         // run
                         gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexArray.length / 2);
                         // release buffers and binding

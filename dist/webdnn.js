@@ -1111,8 +1111,7 @@ class WebGLHandler {
     }
     static initializeWebGL1Context(canvas = document.createElement('canvas')) {
         let gl;
-        let vao;
-        gl = (canvas.getContext('webgl') || canvas.getContext('webgl-experimental'));
+        gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
         if (!gl)
             return null;
         if (!gl.getExtension('OES_texture_float'))
@@ -1123,11 +1122,10 @@ class WebGLHandler {
             // currently when WebGLRenderingContext#readPixels is called, an error is thrown.
             return null;
         }
-        if (!(vao = gl.getExtension('OES_vertex_array_object')))
-            return null;
+        // if (!(vao = gl.getExtension('OES_vertex_array_object'))) return null;
         if (isDebugMode() && !gl.getExtension('WEBGL_debug_renderer_info'))
             return null;
-        return { gl, vao };
+        return gl;
     }
     static initializeContext() {
         let canvas = document.createElement('canvas');
@@ -1139,10 +1137,8 @@ class WebGLHandler {
                 console.info('WebGL2 is enabled');
         }
         else {
-            let res = WebGLHandler.initializeWebGL1Context(canvas);
-            if (res) {
-                gl = res.gl;
-                vao = res.vao;
+            gl = WebGLHandler.initializeWebGL1Context(canvas);
+            if (gl) {
                 if (isDebugMode())
                     console.info('WebGL2 is disabled');
             }
@@ -1702,12 +1698,10 @@ class DescriptorRunnerWebGL extends DescriptorRunner {
                     }
                 });
                 // vao
-                let vao = this.handler.createVertexArray();
-                this.handler.bindVertexArray(vao);
+                // let vao = this.handler.createVertexArray();
+                // this.handler.bindVertexArray(vao);
                 // attributes
-                let loc = gl.getAttribLocation(program, '_xy');
-                gl.vertexAttribPointer(loc, 2, gl.FLOAT, true, 8, 0);
-                gl.enableVertexAttribArray(loc);
+                let xyAttribLoc = gl.getAttribLocation(program, '_xy');
                 // run
                 return {
                     program: program,
@@ -1717,7 +1711,7 @@ class DescriptorRunnerWebGL extends DescriptorRunner {
                     height: output.textureHeight,
                     inputs: inputs,
                     output: output,
-                    vao: vao,
+                    xyAttribLoc: xyAttribLoc,
                     uniforms: uniforms,
                     disposable: []
                 };
@@ -1755,7 +1749,6 @@ class DescriptorRunnerWebGL extends DescriptorRunner {
                     let totalElapsedTime = 0;
                     for (let runtimeProgramInfo of runtimeInfo.programs) {
                         let start = performance.now();
-                        this.handler.bindVertexArray(runtimeProgramInfo.vao);
                         this.handler.bindFrameBuffer(runtimeProgramInfo.frameBuffer, runtimeProgramInfo.width, runtimeProgramInfo.height);
                         // inputs
                         for (let { buffer, uniformIndex } of runtimeProgramInfo.inputs)
@@ -1767,6 +1760,9 @@ class DescriptorRunnerWebGL extends DescriptorRunner {
                         // uniforms
                         for (let uniform of runtimeProgramInfo.uniforms)
                             uniform.func.apply(gl, uniform.args);
+                        // attribute
+                        gl.vertexAttribPointer(runtimeProgramInfo.xyAttribLoc, 2, gl.FLOAT, true, 8, 0);
+                        gl.enableVertexAttribArray(runtimeProgramInfo.xyAttribLoc);
                         // run
                         gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexArray.length / 2);
                         yield this.handler.waitForComplete();
@@ -1806,7 +1802,6 @@ class DescriptorRunnerWebGL extends DescriptorRunner {
                 }
                 else {
                     for (let runtimeProgramInfo of runtimeInfo.programs) {
-                        this.handler.bindVertexArray(runtimeProgramInfo.vao);
                         this.handler.bindFrameBuffer(runtimeProgramInfo.frameBuffer, runtimeProgramInfo.width, runtimeProgramInfo.height);
                         // inputs
                         for (let { buffer, uniformIndex } of runtimeProgramInfo.inputs)
@@ -1818,6 +1813,9 @@ class DescriptorRunnerWebGL extends DescriptorRunner {
                         // uniforms
                         for (let uniform of runtimeProgramInfo.uniforms)
                             uniform.func.apply(gl, uniform.args);
+                        // attribute
+                        gl.vertexAttribPointer(runtimeProgramInfo.xyAttribLoc, 2, gl.FLOAT, true, 8, 0);
+                        gl.enableVertexAttribArray(runtimeProgramInfo.xyAttribLoc);
                         // run
                         gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexArray.length / 2);
                         // release buffers and binding

@@ -5,14 +5,15 @@ import tensorflow as tf
 
 from webdnn import ConstantVariable
 from webdnn.frontend.constraints import AxisVar, unify_order
+from webdnn.frontend.tensorflow.converter import TensorFlowConverter
+from webdnn.graph.axis import Axis
 from webdnn.graph.operators.reshape import Reshape
 from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
-from webdnn.graph.variable import Variable
-from webdnn.graph.axis import Axis
-from webdnn.graph.graph import Graph
-from webdnn.graph.order import Order, OrderNC, OrderNTC, OrderNHWC, OrderC
+from webdnn.graph.order import Order, OrderNHWC
 from webdnn.graph.placeholder import Placeholder
-from webdnn.frontend.tensorflow.converter import TensorFlowConverter
+from webdnn.graph.variable import Variable
+from webdnn.util import console
+from webdnn.util.assertion import UnexpectedAndPleaseReportError
 
 
 @TensorFlowConverter.register_handler("BatchMatrixBandPart")
@@ -77,11 +78,23 @@ def const_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     shape = [Placeholder() if dim.value is None else dim.value for dim in tensor.shape.dims]
     if len(shape) == 0:
         # Scalar variable
-        # WebDNN's variable should have at least 1 dimension
-        variable = ConstantVariable(np.array([tf_op.get_attr("value").float_val._values[0]], dtype=np.float32),
-                                    Order([Axis.C]))
+
+        # noinspection PyProtectedMember
+        val = tf_op.get_attr("value").float_val._values
+        if len(val) == 0:
+            # noinspection PyProtectedMember
+            val = tf_op.get_attr("value").int_val._values
+
+        if len(val) == 0:
+            UnexpectedAndPleaseReportError(tf_op.get_attr("value"))
+
+        # noinspection PyTypeChecker
+        variable = ConstantVariable(np.array(val, dtype=np.float32), Order([AxisVar()]))
+
     else:
+        # noinspection PyTypeChecker
         variable = Variable(shape, Order([AxisVar() for _ in shape]))
+
     converter.set_variable(tensor, variable)
 
 
@@ -277,7 +290,10 @@ def parallel_concat_handler(converter: TensorFlowConverter, tf_op: "tf.Operation
 
 @TensorFlowConverter.register_handler("Placeholder")
 def placeholder_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    shape = [Placeholder() if dim.size() is -1 else dim.size() for dim in tf_op.get_attr("shape").dim]
+    print(shape)
+    # noinspection PyTypeChecker
+    converter.set_variable(tf_op.outputs[0], Variable(shape, Order([AxisVar for _ in shape])))
 
 
 @TensorFlowConverter.register_handler("PlaceholderV2")
@@ -469,7 +485,8 @@ def squeeze_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("StopGradient")
 def stop_gradient_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    console.warning("[TensorFlowConverter] StopGradient is ignored.")
+    converter.set_variable(tf_op.outputs[0], converter.get_variable(tf_op.inputs[0]))
 
 
 @TensorFlowConverter.register_handler("StridedSlice")

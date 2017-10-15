@@ -59,8 +59,8 @@ class Concat(Operator):
                 if Placeholder.check_resolved(xs[0].shape_dict[other_axis]) and Placeholder.check_resolved(x.shape_dict[other_axis]):
                     assert xs[0].shape_dict[other_axis] == x.shape_dict[other_axis], "Input variable of Concat operator must be same " \
                                                                                      f"shape except the specified axis: " \
-                                                                                     f"x0.shape_dict[{axis}]={xs[0].shape_dict[axis]}, " \
-                                                                                     f"x{i}.shape_dict[{axis}]={xs[i].shape_dict[axis]}"
+                                                                                     f"x0.shape_dict[{other_axis}]={xs[0].shape_dict[other_axis]}, " \
+                                                                                     f"x{i}.shape_dict[{other_axis}]={xs[i].shape_dict[other_axis]}"
 
             y_shape[axis_index] += x.shape_dict[axis]
 

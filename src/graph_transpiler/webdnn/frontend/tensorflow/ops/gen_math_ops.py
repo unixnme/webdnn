@@ -598,7 +598,12 @@ def square_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("SquaredDifference")
 def squared_difference_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    y = converter.get_variable(tf_op.inputs[1])
+
+    check_broadcast_constraints(x, y)
+
+    converter.set_variable(tf_op.outputs[0], (x - y) ** 2)
 
 
 @TensorFlowConverter.register_handler("Sub")

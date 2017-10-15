@@ -139,9 +139,8 @@ export default class WebGLHandler {
 
     static initializeWebGL1Context(canvas: HTMLCanvasElement = document.createElement('canvas')) {
         let gl: WebGLRenderingContext | null;
-        let vao: WebGLVertexArrayObjectExtension | null;
 
-        gl = (canvas.getContext('webgl') || canvas.getContext('webgl-experimental')) as WebGLRenderingContext | null;
+        gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
 
         if (!gl) return null;
         if (!gl.getExtension('OES_texture_float')) return null;
@@ -152,10 +151,10 @@ export default class WebGLHandler {
             return null
         }
 
-        if (!(vao = gl.getExtension('OES_vertex_array_object'))) return null;
+        // if (!(vao = gl.getExtension('OES_vertex_array_object'))) return null;
         if (isDebugMode() && !gl.getExtension('WEBGL_debug_renderer_info')) return null;
 
-        return {gl, vao};
+        return gl;
     }
 
     static initializeContext() {
@@ -168,11 +167,9 @@ export default class WebGLHandler {
             if (isDebugMode()) console.info('WebGL2 is enabled');
 
         } else {
-            let res = WebGLHandler.initializeWebGL1Context(canvas);
+            gl = WebGLHandler.initializeWebGL1Context(canvas);
 
-            if (res) {
-                gl = res.gl;
-                vao = res.vao;
+            if (gl) {
                 if (isDebugMode()) console.info('WebGL2 is disabled');
 
             } else {

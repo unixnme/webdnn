@@ -9,8 +9,8 @@ from webdnn.graph.operators.average_pooling_2d import AveragePooling2D
 from webdnn.graph.operators.max_pooling_2d import MaxPooling2D
 from webdnn.graph.operators.reshape import Reshape
 from webdnn.graph.order import OrderNC, OrderNCHW, OrderNHWC, OrderNTC
-from webdnn.util.misc import mul
 from webdnn.util import console
+from webdnn.util.misc import mul
 
 
 @KerasConverter.register_handler("MaxPooling1D")
@@ -54,7 +54,18 @@ def _convert_max_pooling2d(converter: KerasConverter, k_op: "keras.layers.MaxPoo
         padding = (0, 0)
 
     elif k_op.padding == "same":
-        padding = (ksize[0] // 2, ksize[1] // 2)
+        # https://www.tensorflow.org/api_guides/python/nn#convolution
+        if x.shape_dict[Axis.H] % stride[0] == 0:
+            pad_h = max(ksize[0] - stride[0], 0)
+        else:
+            pad_h = max(ksize[0] - (x.shape_dict[Axis.H] % stride[0]), 0)
+
+        if x.shape_dict[Axis.W] % stride[1] == 0:
+            pad_w = max(ksize[1] - stride[1], 0)
+        else:
+            pad_w = max(ksize[1] - (x.shape_dict[Axis.W] % stride[1]), 0)
+
+        padding = (pad_h, pad_w)
 
     else:
         raise ValueError(f"[KerasConverter] Unknown padding: {k_op.padding}")
@@ -76,17 +87,23 @@ def _convert_average_pooling1d(converter: KerasConverter, k_op: "keras.layers.Av
 
     # FIXME: More effective implementation
     y, = Reshape(None, in_order=x.order, out_order=OrderNHWC, out_shape=[x.shape[0], x.shape[1], 1, x.shape[2]])(x)
+    ksize = (k_op.pool_size[0], 1)
+    stride = (k_op.strides[0], 1)
 
     if k_op.padding == "valid":
         padding = (0, 0)
 
     elif k_op.padding == "same":
-        padding = (k_op.pool_size[0] // 2, 0)
+        # https://www.tensorflow.org/api_guides/python/nn#convolution
+        if x.shape_dict[Axis.H] % stride[0] == 0:
+            padding = (max(ksize[0] - stride[0], 0), 0)
+        else:
+            padding = (max(ksize[0] - (x.shape_dict[Axis.H] % stride[0]), 0), 0)
 
     else:
         raise NotImplementedError(f"Unknown padding: {k_op.padding}")
 
-    y, = AveragePooling2D(None, ksize=(k_op.pool_size[0], 1), stride=(1, 1), padding=padding)(y)
+    y, = AveragePooling2D(None, ksize=ksize, stride=stride, padding=padding)(y)
     z, = Reshape(None, in_order=y.order, out_order=OrderNTC, out_shape=[y.shape[0], y.shape[1], y.shape[3]])(y)
 
     converter.set_variable(converter.get_output_tensor(k_op)[0], z)
@@ -111,7 +128,18 @@ def _convert_max_pooling2d(converter: KerasConverter, k_op: "keras.layers.Averag
         padding = (0, 0)
 
     elif k_op.padding == "same":
-        padding = (ksize[0] // 2, ksize[1] // 2)
+        # https://www.tensorflow.org/api_guides/python/nn#convolution
+        if x.shape_dict[Axis.H] % stride[0] == 0:
+            pad_h = max(ksize[0] - stride[0], 0)
+        else:
+            pad_h = max(ksize[0] - (x.shape_dict[Axis.H] % stride[0]), 0)
+
+        if x.shape_dict[Axis.W] % stride[1] == 0:
+            pad_w = max(ksize[1] - stride[1], 0)
+        else:
+            pad_w = max(ksize[1] - (x.shape_dict[Axis.W] % stride[1]), 0)
+
+        padding = (pad_h, pad_w)
         console.warning(
             "[KerasConverter] keras.layers.AveragePooling computes average by dividing number of valid elements in window "
             "(without padding element), but WebDNN divides it by the number of elements including padding element, so different "
