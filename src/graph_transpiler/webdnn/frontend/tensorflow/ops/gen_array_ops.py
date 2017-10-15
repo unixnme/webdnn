@@ -8,7 +8,7 @@ from tensorflow.python.framework.tensor_util import MakeNdarray
 from webdnn import ConstantVariable
 from webdnn.frontend.constraints import AxisVar, unify_order
 from webdnn.frontend.tensorflow.converter import TensorFlowConverter
-from webdnn.graph.axis import Axis
+from webdnn.graph.axis import Axis, AxisKeyDict
 from webdnn.graph.operators.concat import Concat
 from webdnn.graph.operators.depth2space import Depth2Space
 from webdnn.graph.operators.reshape import Reshape
@@ -658,7 +658,7 @@ def tile_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     if not isinstance(multiplier, ConstantVariable):
         raise NotImplementedError("[TensorFlowConverter] Operator 'Tile' with dynamic multiplier is not supported yet.")
 
-    multiplier = multiplier.data.astype(int).flatten().tolist()  # type: List[int]
+    multiplier = AxisKeyDict(x.order.axes, multiplier.data.astype(int).flatten().tolist())
     y, = Tile(None, multiplier=multiplier)(x)
 
     converter.set_variable(tf_op.outputs[0], y)

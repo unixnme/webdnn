@@ -41,6 +41,9 @@ class Converter(Generic[T_OP]):
         Args:
             key: operator type name. As default, it's the class name for each operator instance. you can change this
                  behavior by overriding :func:`~webdnn.converter.Converter.serialize_operator_type`.
+
+        Returns:
+            :
         """
 
         def decorator(handler: Callable[["Converter", T_OP], Operator]):

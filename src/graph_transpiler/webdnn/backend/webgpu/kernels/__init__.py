@@ -38,3 +38,4 @@ from webdnn.backend.webgpu.kernels import tanh
 from webdnn.backend.webgpu.kernels import threshold_relu
 from webdnn.backend.webgpu.kernels import transpose
 from webdnn.backend.webgpu.kernels import zero_padding_1d
+from webdnn.backend.webgpu.kernels import tile

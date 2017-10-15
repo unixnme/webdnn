@@ -1,7 +1,8 @@
-from typing import Optional, Sequence, Tuple
+from typing import Optional
 
 import numpy as np
 
+from webdnn.graph.axis import AxisKeyDict
 from webdnn.graph.graph import Graph
 from webdnn.graph.operator import Operator
 from webdnn.graph.optimize_rule import OptimizeRule
@@ -27,7 +28,7 @@ class Tile(Operator):
 
     """
 
-    def __init__(self, name: Optional[str], multiplier: Sequence[int]):
+    def __init__(self, name: Optional[str], multiplier: AxisKeyDict[int]):
         super().__init__(name)
         self.parameters["multiplier"] = multiplier
 
@@ -41,14 +42,14 @@ class Tile(Operator):
                                                f"  (x.ndim)={x.ndim}" \
                                                f"  (len(self.multiplier))={len(self.multiplier)}"
 
-        y_shape = [s * m for s, m in zip(x.shape, self.multiplier)]
+        y_shape = [self.multiplier[a] * x.shape_dict[a] for a in x.order.axes]
         y = Variable(y_shape, x.order)
         self.append_output("y", y)
         return y,
 
     @property
-    def multiplier(self) -> Tuple[int]:
-        return tuple(self.parameters["multiplier"])
+    def multiplier(self) -> AxisKeyDict[int]:
+        return self.parameters["multiplier"]
 
     def fold_constance(self, graph: Graph):
         x = self.inputs["x"]  # type: ConstantVariable

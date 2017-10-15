@@ -31,5 +31,5 @@ class WebGPUOptimizeRule(OptimizeRuleGroup):
                 RemoveNoEffectOperator(),
                 UpdateInplaceAttribute()
             ]),
-            ElementwiseKernelFusion()
+            ElementwiseKernelFusion(),
         ])

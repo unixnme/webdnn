@@ -39,5 +39,6 @@ from webdnn.backend.webgl.kernels import split_axis
 from webdnn.backend.webgl.kernels import sum
 from webdnn.backend.webgl.kernels import tanh
 from webdnn.backend.webgl.kernels import threshold_relu
+from webdnn.backend.webgl.kernels import tile
 from webdnn.backend.webgl.kernels import transpose
 from webdnn.backend.webgl.kernels import util

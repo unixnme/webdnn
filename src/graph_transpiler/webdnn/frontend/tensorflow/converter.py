@@ -99,17 +99,16 @@ class TensorFlowConverter(Converter["tf.Operation"]):
 
         ops = _listup_operations(inputs, outputs)
         for op in ops:
-            print(op)
             self._convert_operator(op)
             sub_graph = Graph([self.get_variable(tf_tensor) for tf_tensor in op.inputs],
                               [self.get_variable(tf_tensor) for tf_tensor in op.outputs])
+
+            # Constant folding improves possibility of conversion, because many tensors are used not only for main input variable but also
+            # for other parameter like indices of operation, and WebDNN doesn't support dynamic indices operation.
             OptimizeRuleGroup([ConstantFolding()], repeat=True).optimize(sub_graph)
             for tf_tensor, webdnn_output in zip(op.outputs, sub_graph.outputs):
                 if self.get_variable(tf_tensor) != webdnn_output:
-                    print(f"{self.get_variable(tf_tensor).name}=>{webdnn_output.name}")
                     self.set_variable(tf_tensor, webdnn_output, overwrite=True)
-                else:
-                    print(f"{webdnn_output.name}")
 
         if order_hints:
             for tensor, order in order_hints.items():
