@@ -15,6 +15,7 @@ from webdnn.graph.operators.reshape import Reshape
 from webdnn.graph.operators.slice import Slice
 from webdnn.graph.operators.space2depth import Space2Depth
 from webdnn.graph.operators.tile import Tile
+from webdnn.graph.operators.transpose import Transpose
 from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
 from webdnn.graph.order import Order, OrderNHWC
 from webdnn.graph.placeholder import Placeholder
@@ -409,6 +410,7 @@ def rank_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
     # noinspection PyTypeChecker
     y = ConstantVariable(np.array([x.ndim]), Order([AxisVar()]))
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("RefIdentity")
@@ -669,7 +671,17 @@ def tile_grad_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Transpose")
 def transpose_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    indices = converter.get_variable(tf_op.inputs[1])
+
+    if not isinstance(indices, ConstantVariable):
+        raise NotImplementedError("[TensorFlowConverter] Operator 'Transpose' with dynamic indices is not supported yet.")
+
+    indices = indices.data.astype(int).flatten().tolist()  # type: List[int]
+    y, = Transpose(None)(x)
+    y.change_order(Order([x.order.axes[i] for i in indices]))
+
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("Unique")
