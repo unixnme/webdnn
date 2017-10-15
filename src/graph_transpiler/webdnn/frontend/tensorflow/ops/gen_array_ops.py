@@ -7,7 +7,9 @@ from webdnn import ConstantVariable
 from webdnn.frontend.constraints import AxisVar, unify_order
 from webdnn.frontend.tensorflow.converter import TensorFlowConverter
 from webdnn.graph.axis import Axis
+from webdnn.graph.operators.depth2space import Depth2Space
 from webdnn.graph.operators.reshape import Reshape
+from webdnn.graph.operators.space2depth import Space2Depth
 from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
 from webdnn.graph.order import Order, OrderNHWC
 from webdnn.graph.placeholder import Placeholder
@@ -100,7 +102,9 @@ def const_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("DepthToSpace")
 def depth_to_space_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    y, = Depth2Space(None, r=tf_op.get_attr("block_size"))(x)
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("Dequantize")
@@ -450,7 +454,9 @@ def space_to_batch_nd_handler(converter: TensorFlowConverter, tf_op: "tf.Operati
 
 @TensorFlowConverter.register_handler("SpaceToDepth")
 def space_to_depth_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    y, = Space2Depth(None, r=tf_op.get_attr("block_size"))(x)
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("Split")
