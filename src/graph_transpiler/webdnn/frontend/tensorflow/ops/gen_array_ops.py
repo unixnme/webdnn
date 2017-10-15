@@ -138,7 +138,19 @@ def edit_distance_handler(converter: TensorFlowConverter, tf_op: "tf.Operation")
 
 @TensorFlowConverter.register_handler("ExpandDims")
 def expand_dims_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    dim = converter.get_variable(tf_op.inputs[1])
+
+    if not isinstance(dim, ConstantVariable):
+        raise NotImplementedError("[TensorFlowConverter] Operator 'ExpandDims' with dynamic dimension is not supported.")
+
+    dim = dim.data.astype(np.int32).flatten()[0]
+    new_shape = list(x.shape)
+    new_shape.insert(dim, 1)
+    new_axes = list(x.order.axes)
+    new_axes.insert(dim, AxisVar())
+    y, = Reshape(None, in_order=x.order, out_order=Order(new_axes), out_shape=new_shape)(x)
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("ExtractImagePatches")
