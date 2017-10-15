@@ -21,6 +21,7 @@ def template(x_shape, multiplier, description: str = ""):
         inputs={
             graph.inputs[0]: vx,
         },
+        backend=["webgpu", "webassembly", "webgl"],
         expected={graph.outputs[0]: vy},
     )
 
