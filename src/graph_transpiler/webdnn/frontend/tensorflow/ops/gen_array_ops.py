@@ -14,6 +14,7 @@ from webdnn.graph.operators.depth2space import Depth2Space
 from webdnn.graph.operators.reshape import Reshape
 from webdnn.graph.operators.slice import Slice
 from webdnn.graph.operators.space2depth import Space2Depth
+from webdnn.graph.operators.tile import Tile
 from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
 from webdnn.graph.order import Order, OrderNHWC
 from webdnn.graph.placeholder import Placeholder
@@ -404,7 +405,10 @@ def quantized_reshape_handler(converter: TensorFlowConverter, tf_op: "tf.Operati
 
 @TensorFlowConverter.register_handler("Rank")
 def rank_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+
+    # noinspection PyTypeChecker
+    y = ConstantVariable(np.array([x.ndim]), Order([AxisVar()]))
 
 
 @TensorFlowConverter.register_handler("RefIdentity")
@@ -646,7 +650,16 @@ def strided_slice_grad_handler(converter: TensorFlowConverter, tf_op: "tf.Operat
 
 @TensorFlowConverter.register_handler("Tile")
 def tile_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    multiplier = converter.get_variable(tf_op.inputs[1])
+
+    if not isinstance(multiplier, ConstantVariable):
+        raise NotImplementedError("[TensorFlowConverter] Operator 'Tile' with dynamic multiplier is not supported yet.")
+
+    multiplier = multiplier.data.astype(int).flatten().tolist()  # type: List[int]
+    y, = Tile(None, multiplier=multiplier)(x)
+
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("TileGrad")
