@@ -1,12 +1,15 @@
+import itertools
 from typing import List
 
-import numpy as np
 import tensorflow as tf
+from tensorflow.python.framework.tensor_util import MakeNdarray
 
 from webdnn import ConstantVariable
 from webdnn.frontend.constraints import AxisVar, unify_order
 from webdnn.frontend.tensorflow.converter import TensorFlowConverter
+from webdnn.frontend.util import check_broadcast_constraints
 from webdnn.graph.axis import Axis
+from webdnn.graph.operators.concat import Concat
 from webdnn.graph.operators.depth2space import Depth2Space
 from webdnn.graph.operators.reshape import Reshape
 from webdnn.graph.operators.space2depth import Space2Depth
@@ -15,7 +18,6 @@ from webdnn.graph.order import Order, OrderNHWC
 from webdnn.graph.placeholder import Placeholder
 from webdnn.graph.variable import Variable
 from webdnn.util import console
-from webdnn.util.assertion import UnexpectedAndPleaseReportError
 
 
 @TensorFlowConverter.register_handler("BatchMatrixBandPart")
@@ -70,7 +72,18 @@ def concat_offset_handler(converter: TensorFlowConverter, tf_op: "tf.Operation")
 
 @TensorFlowConverter.register_handler("ConcatV2")
 def concat_v2_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    xs = [converter.get_variable(tf_tensor) for tf_tensor in tf_op.inputs]
+
+    axis = xs.pop()
+    # TODO
+    assert isinstance(axis, ConstantVariable), "[TensorFlowConverter] Dynamic axis concatenation is not supported yet."
+    axis = xs[0].order.axes[int(axis.data.flatten()[0])]
+
+    for x0, x1 in itertools.permutations(xs):
+        unify_order(x0.order, x1.order)
+
+    y, = Concat(None, axis=axis)(*xs)
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("Const")
@@ -78,20 +91,12 @@ def const_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     # FIXME: should output ConstantVariable?
     tensor = tf_op.outputs[0]
     shape = [Placeholder() if dim.value is None else dim.value for dim in tensor.shape.dims]
+    value = MakeNdarray(tf_op.get_attr("value"))
+
     if len(shape) == 0:
         # Scalar variable
-
-        # noinspection PyProtectedMember
-        val = tf_op.get_attr("value").float_val._values
-        if len(val) == 0:
-            # noinspection PyProtectedMember
-            val = tf_op.get_attr("value").int_val._values
-
-        if len(val) == 0:
-            UnexpectedAndPleaseReportError(tf_op.get_attr("value"))
-
         # noinspection PyTypeChecker
-        variable = ConstantVariable(np.array(val, dtype=np.float32), Order([AxisVar()]))
+        variable = ConstantVariable(value.reshape([1]), Order([AxisVar()]))
 
     else:
         # noinspection PyTypeChecker
@@ -103,6 +108,8 @@ def const_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 @TensorFlowConverter.register_handler("DepthToSpace")
 def depth_to_space_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     x = converter.get_variable(tf_op.inputs[0])
+    unify_order(x.order, OrderNHWC)
+
     y, = Depth2Space(None, r=tf_op.get_attr("block_size"))(x)
     converter.set_variable(tf_op.outputs[0], y)
 
@@ -455,6 +462,8 @@ def space_to_batch_nd_handler(converter: TensorFlowConverter, tf_op: "tf.Operati
 @TensorFlowConverter.register_handler("SpaceToDepth")
 def space_to_depth_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     x = converter.get_variable(tf_op.inputs[0])
+    unify_order(x.order, OrderNHWC)
+
     y, = Space2Depth(None, r=tf_op.get_attr("block_size"))(x)
     converter.set_variable(tf_op.outputs[0], y)
 

@@ -96,7 +96,6 @@ class TensorFlowConverter(Converter["tf.Operation"]):
 
         ops = _listup_operations(inputs, outputs)
         for op in ops:
-            print(op)
             self._convert_operator(op)
 
         if order_hints:
