@@ -1,4 +1,6 @@
+from webdnn.graph.graph import Graph
 from webdnn.graph.operators.elementwise import Elementwise
+from webdnn.graph.optimize_rule import OptimizeRule
 
 
 # FIXME: improve documentation
@@ -13,9 +15,9 @@ class Transpose(Elementwise):
         name (str): Operator name.
     """
 
-    def fold_constance(self):
+    def fold_constance(self, graph: Graph):
         x0 = self.inputs["x0"]
         y = self.outputs["y"]
-
-        y.replace(x0.copy().change_order(y.order))
+        new_y = x0.copy().change_order(y.order)
+        OptimizeRule.replace_variable(graph, y, new_y)
         self.remove_all()

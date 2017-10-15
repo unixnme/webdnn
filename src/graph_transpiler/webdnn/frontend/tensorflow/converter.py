@@ -5,12 +5,14 @@ from webdnn.frontend.constraints import unify, AxisVar
 from webdnn.frontend.converter import Converter
 from webdnn.graph.axis import Axis
 from webdnn.graph.graph import Graph
+from webdnn.graph.optimize_rule import OptimizeRuleGroup
 from webdnn.graph.order import Order, OrderNC, OrderNTC, OrderNHWC, OrderC
 from webdnn.graph.placeholder import Placeholder
 from webdnn.graph.variable import Variable
 from webdnn.graph.variables.attributes.input import Input
 from webdnn.graph.variables.attributes.output import Output
 from webdnn.graph.variables.constant_variable import ConstantVariable
+from webdnn.optimizer.sub_rules.constant_folding import ConstantFolding
 from webdnn.optimizer.tensorflow_frontend_optimize_rule import TensorFlowFrontendOptimizeRule
 from webdnn.util import console
 from webdnn.util import flags
@@ -92,11 +94,22 @@ class TensorFlowConverter(Converter["tf.Operation"]):
             shape = [Placeholder() if dim.value is None else dim.value for dim in tensor.shape.dims]
             if isinstance(shape[0], Placeholder):
                 shape[0] = self._batch_size
+            # noinspection PyTypeChecker
             self.set_variable(tensor, Variable(shape, Order([AxisVar() for _ in shape])))
 
         ops = _listup_operations(inputs, outputs)
         for op in ops:
+            print(op)
             self._convert_operator(op)
+            sub_graph = Graph([self.get_variable(tf_tensor) for tf_tensor in op.inputs],
+                              [self.get_variable(tf_tensor) for tf_tensor in op.outputs])
+            OptimizeRuleGroup([ConstantFolding()], repeat=True).optimize(sub_graph)
+            for tf_tensor, webdnn_output in zip(op.outputs, sub_graph.outputs):
+                if self.get_variable(tf_tensor) != webdnn_output:
+                    print(f"{self.get_variable(tf_tensor).name}=>{webdnn_output.name}")
+                    self.set_variable(tf_tensor, webdnn_output, overwrite=True)
+                else:
+                    print(f"{webdnn_output.name}")
 
         if order_hints:
             for tensor, order in order_hints.items():

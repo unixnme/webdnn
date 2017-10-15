@@ -76,16 +76,17 @@ class Converter(Generic[T_OP]):
         """
         return self._variable_table[self.__class__.__name__][key]
 
-    def set_variable(self, key: object, variable: Variable):
+    def set_variable(self, key: object, variable: Variable, overwrite: bool = False):
         """set_variable(key, variable)
         Stores variable object corresponding to the key.
 
         Args:
             key (object): key
             variable (:class:`~webdnn.Variable`): variable
+            overwrite (bool): When False, if the key is already exist, KeyError is raised.
         """
-        if key in self._variable_table[self.__class__.__name__]:
-            raise ValueError(f"Variable {key} already exists")
+        if not overwrite and key in self._variable_table[self.__class__.__name__]:
+            raise KeyError(f"Variable {key} already exists")
         self._variable_table[self.__class__.__name__][key] = variable
 
     def has_variable(self, key: object) -> bool:

@@ -1,4 +1,6 @@
+import numpy as np
 import tensorflow as tf
+from tensorflow.core.framework.types_pb2 import DT_FLOAT
 
 from webdnn.frontend.constraints import unify, AxisVar, unify_order
 from webdnn.frontend.tensorflow.converter import TensorFlowConverter
@@ -19,7 +21,8 @@ from webdnn.graph.operators.scalar_mul import ScalarMul
 from webdnn.graph.operators.sigmoid import Sigmoid
 from webdnn.graph.operators.tanh import Tanh
 from webdnn.graph.order import OrderNC, OrderCN, Order, OrderNHWC
-from webdnn.util import flags
+from webdnn.graph.variables.constant_variable import ConstantVariable
+from webdnn.util import flags, console
 
 TensorFlowConverter.register_handler("Abs")(unary_op_handler(Abs))
 
@@ -111,7 +114,14 @@ def bucketize_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Cast")
 def cast_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    dst_t = tf_op.get_attr("DstT")
+    print(dst_t, type(dst_t))
+
+    if dst_t != DT_FLOAT:
+        console.warning("[TensorFlowConverter] Operator 'Cast' is ignored.")
+
+    x = converter.get_variable(tf_op.inputs[0])
+    converter.set_variable(tf_op.outputs[0], x)
 
 
 @TensorFlowConverter.register_handler("Ceil")
@@ -451,7 +461,26 @@ def quantized_mul_handler(converter: TensorFlowConverter, tf_op: "tf.Operation")
 
 @TensorFlowConverter.register_handler("Range")
 def range_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    start = converter.get_variable(tf_op.inputs[0])
+    limit = converter.get_variable(tf_op.inputs[1])
+    delta = converter.get_variable(tf_op.inputs[2])
+
+    if not isinstance(start, ConstantVariable):
+        raise NotImplementedError("[TensorFlowConverter] 'Range' operator with dynamic range is not supported yet")
+
+    if not isinstance(limit, ConstantVariable):
+        raise NotImplementedError("[TensorFlowConverter] 'Range' operator with dynamic range is not supported yet")
+
+    if not isinstance(delta, ConstantVariable):
+        raise NotImplementedError("[TensorFlowConverter] 'Range' operator with dynamic range is not supported yet")
+
+    start = start.data.flatten()[0]
+    limit = limit.data.flatten()[0]
+    delta = delta.data.flatten()[0]
+
+    # noinspection PyTypeChecker
+    y = ConstantVariable(np.arange(start, limit, delta), Order([AxisVar()]))
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("Real")

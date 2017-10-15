@@ -1,23 +1,25 @@
 import itertools
 from typing import List
 
+import numpy as np
 import tensorflow as tf
 from tensorflow.python.framework.tensor_util import MakeNdarray
 
 from webdnn import ConstantVariable
 from webdnn.frontend.constraints import AxisVar, unify_order
 from webdnn.frontend.tensorflow.converter import TensorFlowConverter
-from webdnn.frontend.util import check_broadcast_constraints
 from webdnn.graph.axis import Axis
 from webdnn.graph.operators.concat import Concat
 from webdnn.graph.operators.depth2space import Depth2Space
 from webdnn.graph.operators.reshape import Reshape
+from webdnn.graph.operators.slice import Slice
 from webdnn.graph.operators.space2depth import Space2Depth
 from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
 from webdnn.graph.order import Order, OrderNHWC
 from webdnn.graph.placeholder import Placeholder
-from webdnn.graph.variable import Variable
 from webdnn.util import console
+from webdnn.util.assertion import UnexpectedAndPleaseReportError
+from webdnn.util.misc import mul
 
 
 @TensorFlowConverter.register_handler("BatchMatrixBandPart")
@@ -79,7 +81,7 @@ def concat_v2_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     assert isinstance(axis, ConstantVariable), "[TensorFlowConverter] Dynamic axis concatenation is not supported yet."
     axis = xs[0].order.axes[int(axis.data.flatten()[0])]
 
-    for x0, x1 in itertools.permutations(xs):
+    for x0, x1 in itertools.permutations(xs, 2):
         unify_order(x0.order, x1.order)
 
     y, = Concat(None, axis=axis)(*xs)
@@ -100,7 +102,7 @@ def const_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
     else:
         # noinspection PyTypeChecker
-        variable = Variable(shape, Order([AxisVar() for _ in shape]))
+        variable = ConstantVariable(value, Order([AxisVar() for _ in shape]))
 
     converter.set_variable(tensor, variable)
 
@@ -256,7 +258,37 @@ def ones_like_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Pack")
 def pack_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    xs = [converter.get_variable(tf_tensor) for tf_tensor in tf_op.inputs]
+    i_axis = tf_op.get_attr("axis")
+
+    for x0, x1 in itertools.permutations(xs, 2):
+        unify_order(x0.order, x1.order)
+        assert x0.shape == x1.shape
+
+    if i_axis == 0:
+        concat_axis = xs[0].order.axes[0]
+
+    else:
+        concat_axis = xs[0].order.axes[i_axis - 1]
+
+    y, = Concat(None, axis=concat_axis)(*xs)
+
+    new_axes = list(y.order.axes)
+    new_axes.insert(i_axis, AxisVar())
+    new_order = Order(new_axes)
+
+    if i_axis == 0:
+        new_shape = list(y.shape)
+        new_shape[i_axis] //= len(xs)
+        new_shape.insert(i_axis, len(xs))
+
+    else:
+        new_shape = list(y.shape)
+        new_shape[i_axis - 1] //= len(xs)
+        new_shape.insert(i_axis, len(xs))
+
+    y, = Reshape(None, in_order=y.order, out_order=new_order, out_shape=new_shape)(y)
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("Pad")
@@ -302,9 +334,10 @@ def parallel_concat_handler(converter: TensorFlowConverter, tf_op: "tf.Operation
 @TensorFlowConverter.register_handler("Placeholder")
 def placeholder_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     shape = [Placeholder() if dim.size() is -1 else dim.size() for dim in tf_op.get_attr("shape").dim]
-    print(shape)
+    assert all(Placeholder.check_resolved(s) for s in shape), UnexpectedAndPleaseReportError(shape)
+
     # noinspection PyTypeChecker
-    converter.set_variable(tf_op.outputs[0], Variable(shape, Order([AxisVar for _ in shape])))
+    converter.set_variable(tf_op.outputs[0], ConstantVariable(shape, Order([AxisVar for _ in shape])))
 
 
 @TensorFlowConverter.register_handler("PlaceholderV2")
@@ -369,34 +402,21 @@ def ref_identity_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Reshape")
 def reshape_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    # input: data, output_shape
-    # output: reshaped_data
-    # Currently, ignores output_shape.
-    in_var = converter.get_variable(tf_op.inputs[0])
-    out_tf_var = tf_op.outputs[0]
-    # calculate output shape from out_tf_var.shape and in_var.shape
-    # out_tf_var.shape can have at most one placeholder.
-    out_placeholder_count = 0
-    out_placeholder_idx = None
-    out_constant_prod = 1
-    out_shape = []
-    for i, dim_size in enumerate(out_tf_var.shape.dims):
-        out_shape.append(dim_size.value)
-        if dim_size.value is None:
-            out_placeholder_count += 1
-            out_placeholder_idx = i
-        else:
-            out_constant_prod *= dim_size.value
-    if out_placeholder_count > 1:
-        raise NotImplementedError(
-            "[TensorFlowConverter] Reshape: output with more than one placeholder is not supported yet.")
-    elif out_placeholder_count == 1:
-        if in_var.size % out_constant_prod != 0:
-            raise ValueError("[TensorFlowConverter] Reshape: invalid reshape output value.")
-        out_shape[out_placeholder_idx] = in_var.size // out_constant_prod
-    out_var, = Reshape(None, in_order=in_var.order, out_order=Order([AxisVar() for _ in out_shape]),
-                       out_shape=out_shape)(in_var)
-    converter.set_variable(out_tf_var, out_var)
+    tf_x = tf_op.inputs[0]
+    x = converter.get_variable(tf_x)
+    shape = converter.get_variable(tf_op.inputs[1])
+
+    assert isinstance(shape, ConstantVariable), NotImplementedError("[TensorFlowConverter] Dynamic shape reshaping is not supported yet.")
+
+    shape = shape.data.astype(int).flatten().tolist()  # type: List[int]
+    if -1 in shape:
+        i = shape.index(-1)
+        shape.remove(-1)
+        shape.insert(i, x.size // mul(shape))
+
+    # noinspection PyTypeChecker
+    y, = Reshape(None, in_order=x.order, out_order=Order([AxisVar() for _ in shape]), out_shape=shape)(x)
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("ResourceStridedSliceAssign")
@@ -431,7 +451,12 @@ def scatter_nd_non_aliasing_add_handler(converter: TensorFlowConverter, tf_op: "
 
 @TensorFlowConverter.register_handler("Shape")
 def shape_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    assert all(Placeholder.check_resolved(s) for s in x.shape), "[TensorFlowConverter] op 'Shape' with dynamic shape is not supported yet. "
+
+    # noinspection PyTypeChecker
+    y = ConstantVariable(np.array(x.shape), Order([AxisVar()]))
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("ShapeN")
@@ -446,7 +471,24 @@ def size_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Slice")
 def slice_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    begin = converter.get_variable(tf_op.inputs[1])
+    size = converter.get_variable(tf_op.inputs[2])
+
+    assert isinstance(begin, ConstantVariable), \
+        NotImplementedError("[TensorFlowConverter] Slicing tensor with dynamic index is not supported yet:"
+                            f"  type(begin)={type(begin)}")
+
+    assert isinstance(size, ConstantVariable), \
+        NotImplementedError("[TensorFlowConverter] Slicing tensor with dynamic index is not supported yet:"
+                            f"  type(size)={type(size)}")
+
+    begin = begin.data.astype(int).flatten().tolist()  # type: List[int]
+    size = size.data.astype(int).flatten().tolist()  # type: List[int]
+
+    y, = Slice(None, begin=begin, end=begin + size, stride=[1 for _ in begin])(x)
+
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("SpaceToBatch")
@@ -506,7 +548,78 @@ def stop_gradient_handler(converter: TensorFlowConverter, tf_op: "tf.Operation")
 
 @TensorFlowConverter.register_handler("StridedSlice")
 def strided_slice_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    begin = converter.get_variable(tf_op.inputs[1])
+    end = converter.get_variable(tf_op.inputs[2])
+    stride = converter.get_variable(tf_op.inputs[3])
+
+    assert isinstance(begin, ConstantVariable), \
+        NotImplementedError("[TensorFlowConverter] Slicing tensor with dynamic index is not supported yet:"
+                            f"  type(begin)={type(begin)}")
+
+    assert isinstance(end, ConstantVariable), \
+        NotImplementedError("[TensorFlowConverter] Slicing tensor with dynamic index is not supported yet:"
+                            f"  type(end)={type(end)}")
+
+    assert isinstance(stride, ConstantVariable), \
+        NotImplementedError("[TensorFlowConverter] Slicing tensor with dynamic index is not supported yet:"
+                            f"  type(strides)={type(stride)}")
+
+    begin = begin.data.astype(int).flatten().tolist()  # type: List[int]
+    end = end.data.astype(int).flatten().tolist()  # type: List[int]
+    stride = stride.data.astype(int).flatten().tolist()  # type: List[int]
+
+    begin_mask = tf_op.get_attr("begin_mask")
+    end_mask = tf_op.get_attr("end_mask")
+    ellipsis_mask = tf_op.get_attr("ellipsis_mask")
+    new_axis_mask = tf_op.get_attr("new_axis_mask")
+
+    d = 0
+    while d < x.ndim:
+        if (1 << d) & ellipsis_mask:
+            begin.pop(d)
+            end.pop(d)
+            stride.pop(d)
+
+            ellipsis_mask ^= 1 << d
+            begin_mask >>= 1
+            end_mask >>= 1
+
+            while len(begin) < x.ndim:
+                begin.insert(d, 0)
+                end.insert(d, x.shape[d])
+                stride.insert(d, 1)
+
+                begin_mask <<= 1
+                end_mask <<= 1
+
+                d += 1
+
+            continue
+
+        if (1 << d) & begin_mask:
+            begin_mask ^= 1 << d
+            begin[d] = 0
+
+        if (1 << d) & end_mask:
+            end_mask ^= 1 << d
+            end[d] = x.shape[d]
+
+        d += 1
+
+    y, = Slice(None, begin=begin, end=end, stride=stride)(x)
+
+    if new_axis_mask > 0:
+        new_axes = list(y.order.axes)
+        new_shape = list(y.shape)
+        for d in reversed(range(0, tf_op.outputs[0].shape.ndims)):
+            if new_axis_mask & 1 << d:
+                new_axes.insert(d, AxisVar())
+                new_shape.insert(d, 1)
+
+        y, = Reshape(y, in_order=y.order, out_order=Order(new_axes), out_shape=new_shape)(y)
+
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("StridedSliceAssign")

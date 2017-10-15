@@ -1,10 +1,15 @@
 from typing import List, Optional
 
+import numpy as np
+
 from webdnn.graph.axis import Axis
+from webdnn.graph.graph import Graph
 from webdnn.graph.operator import Operator
 from webdnn.graph.operators.attributes.tensorwise import Tensorwise
+from webdnn.graph.optimize_rule import OptimizeRule
 from webdnn.graph.placeholder import Placeholder
 from webdnn.graph.variable import Variable
+from webdnn.graph.variables.constant_variable import ConstantVariable
 
 
 class Concat(Operator):
@@ -71,3 +76,12 @@ class Concat(Operator):
     @property
     def axis(self) -> Axis:
         return self.parameters["axis"]
+
+    def fold_constance(self, graph: Graph):
+        xs = [self.inputs[f"x{i}"] for i in range(len(self.inputs))]  # type: List[ConstantVariable]
+        y = self.outputs["y"]
+
+        data = np.concatenate([x.copy().change_order(y.order).data for x in xs], axis=y.order.axes_dict[self.axis])
+        new_y = ConstantVariable(data, y.order)
+        OptimizeRule.replace_variable(graph, y, new_y)
+        self.remove_all()
