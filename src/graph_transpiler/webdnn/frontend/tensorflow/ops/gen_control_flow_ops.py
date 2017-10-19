@@ -75,4 +75,5 @@ def ref_switch_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Switch")
 def switch_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
+    tf.cond
     raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")

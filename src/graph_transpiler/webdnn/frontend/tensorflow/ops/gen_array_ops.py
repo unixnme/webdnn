@@ -11,13 +11,16 @@ from webdnn.frontend.tensorflow.converter import TensorFlowConverter
 from webdnn.graph.axis import Axis, AxisKeyDict
 from webdnn.graph.operators.concat import Concat
 from webdnn.graph.operators.depth2space import Depth2Space
+from webdnn.graph.operators.embedding import Embedding
+from webdnn.graph.operators.reinterpret_axis import ReinterpretAxis
 from webdnn.graph.operators.reshape import Reshape
 from webdnn.graph.operators.slice import Slice
 from webdnn.graph.operators.space2depth import Space2Depth
 from webdnn.graph.operators.tile import Tile
 from webdnn.graph.operators.transpose import Transpose
+from webdnn.graph.operators.zero_padding_1d import ZeroPadding1D
 from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
-from webdnn.graph.order import Order, OrderNHWC
+from webdnn.graph.order import Order, OrderNHWC, OrderNTC, OrderNT, OrderCN
 from webdnn.graph.placeholder import Placeholder
 from webdnn.util import console
 from webdnn.util.assertion import UnexpectedAndPleaseReportError
@@ -197,7 +200,25 @@ def fill_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Gather")
 def gather_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    params = converter.get_variable(tf_op.inputs[0])
+    indices = converter.get_variable(tf_op.inputs[1])
+    out_shape = [d.value for d in tf_op.outputs[0].shape]  # NTC
+
+    # FIXME: more general implementation
+    if indices.ndim == 2 and params.ndim == 2 and len(out_shape) == 3:
+        # Gather as Embedding
+        _, sequence_len, embedding_dim = out_shape
+        assert indices.shape[1] == sequence_len, NotImplementedError
+        assert params.shape[1] == embedding_dim, NotImplementedError
+        unify_order(indices.order, OrderNT)
+        unify_order(params.order, OrderCN)
+
+        y, = Embedding(None)(indices, params)
+
+    else:
+        raise NotImplementedError("[TensorFlowConverter] Only 1D or 2D indices is supported in 'Gather' operation")
+
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("GatherNd")
@@ -307,32 +328,33 @@ def pack_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Pad")
 def pad_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    # Zero padding
-    # FIXME: currently, determining padding from shape of input / output. Originally, determining by inputs[1] is correct.
+    x = converter.get_variable(tf_op.inputs[0])
+    pad = converter.get_variable(tf_op.inputs[1])
 
-    in_var = converter.get_variable(tf_op.inputs[0])
-    unify_order(in_var.order, OrderNHWC)  # FIXME: assuming input order as NHWC
-    out_tf_var = tf_op.outputs[0]
-    # calculate output shape from out_tf_var.shape and in_var.shape
-    # ZeroPadding2D operator only accepts padding for H and W axes.
-    padding = [0, 0]
-    for dim in range(in_var.ndim):
-        in_size = in_var.shape[dim]
-        out_size = out_tf_var.shape.dims[dim].value
-        assert isinstance(in_size, int), "[TensorFlowConverter] Pad: Placeholder for input shape is not supported yet."
-        assert isinstance(out_size, int), "[TensorFlowConverter] Pad: Placeholder for output shape is not supported yet."
-        axis = in_var.order.axes[dim]
-        if axis in [Axis.H, Axis.W]:
-            assert (out_size - in_size % 2) != 0, "[TensorFlowConverter] Pad: Uneven padding is not supported yet."
-            pad_size = (out_size - in_size) // 2
-            if axis == Axis.H:
-                padding[0] = pad_size
-            elif axis == Axis.W:
-                padding[1] = pad_size
-        else:
-            assert out_size == in_size, "[TensorFlowConverter] Pad: padding for axis other than H and W is not supported yet."
-    out_var, = ZeroPadding2D(None, padding=tuple(padding))(in_var)
-    converter.set_variable(out_tf_var, out_var)
+    assert isinstance(pad, ConstantVariable) and pad.ndim == 2 and pad.shape[0] == x.ndim and pad.shape[1] == 2
+    pad = pad.data.astype(int).tolist()  # type: List[List[int]]
+    n_pad_dim = len(list(filter(lambda p: p[0] > 0 or p[1] > 0, pad)))
+
+    if n_pad_dim == 0:
+        # no padding is needed
+        y = x
+
+    elif n_pad_dim == 1:
+        unify_order(x.order, OrderNTC)  # FIXME
+        pad = tuple(pad[1])
+        y, = ZeroPadding1D(None, padding=pad)(x)
+
+    elif n_pad_dim == 2:
+        unify_order(x.order, OrderNHWC)  # FIXME
+        pad = pad[1:3]
+        assert all(p[0] == p[1] for p in pad), "[TensorFlowConverter] Uneven padding is not supported yet"
+        pad = tuple([p[0] for p in pad])
+        y, = ZeroPadding2D(None, padding=pad)(x)
+
+    else:
+        raise NotImplementedError("[TensorFlowConverter] Only 1D or 2D padding is supported")
+
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("PadV2")
@@ -348,10 +370,13 @@ def parallel_concat_handler(converter: TensorFlowConverter, tf_op: "tf.Operation
 @TensorFlowConverter.register_handler("Placeholder")
 def placeholder_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     shape = [Placeholder() if dim.size() is -1 else dim.size() for dim in tf_op.get_attr("shape").dim]
+    if shape == []:
+        shape = [1]
+
     assert all(Placeholder.check_resolved(s) for s in shape), UnexpectedAndPleaseReportError(shape)
 
     # noinspection PyTypeChecker
-    converter.set_variable(tf_op.outputs[0], ConstantVariable(shape, Order([AxisVar for _ in shape])))
+    converter.set_variable(tf_op.outputs[0], ConstantVariable(np.array(shape), Order([AxisVar for _ in shape])))
 
 
 @TensorFlowConverter.register_handler("PlaceholderV2")

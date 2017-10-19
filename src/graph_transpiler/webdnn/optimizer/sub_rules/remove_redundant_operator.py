@@ -1,10 +1,8 @@
-from typing import Tuple, List
-
 import itertools
+from typing import Tuple
 
 from webdnn.graph import traverse
 from webdnn.graph.graph import Graph
-from webdnn.graph.operator import Operator
 from webdnn.graph.optimize_rule import OptimizeRule
 from webdnn.util import flags
 

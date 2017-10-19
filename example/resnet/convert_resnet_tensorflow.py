@@ -49,8 +49,6 @@ def download_model(out_dir):
 
 
 def main():
-    sys.setrecursionlimit(10000)
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', '-o', default='output_tensorflow', help='Directory to output the graph descriptor')
     parser.add_argument("--encoding", help="name of weight encoder")

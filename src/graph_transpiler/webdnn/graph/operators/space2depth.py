@@ -39,14 +39,14 @@ class Space2Depth(Operator):
         assert x.order.check_same_axes(OrderNHWC), "Input variable of Depth2Space must have N, C, H, and W axes.: " \
                                                    f"x.order.axes={x.order.axes}"
         assert x.shape_dict[Axis.H] % self.parameters["r"] == 0, \
-            "Input variable H axis must be divisible by : " \
+            "Input variable H axis must be dividable by r: " \
             f'r={self.parameters["r"]} ' \
             f"x.shape_dict[Axis.H]={x.shape_dict[Axis.H]}"
 
         assert x.shape_dict[Axis.W] % self.parameters["r"] == 0, \
-            "Input variable W axis must be divisible by : " \
+            "Input variable W axis must be dividable by r: " \
             f'r={self.parameters["r"]} ' \
-            f"x.shape_dict[Axis.W]={x.shape_dict[Axis.H]}"
+            f"x.shape_dict[Axis.W]={x.shape_dict[Axis.W]}"
 
         N = x.shape_dict[Axis.N]
         C = x.shape_dict[Axis.C] * self.parameters["r"] * self.parameters["r"]

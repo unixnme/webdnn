@@ -16,8 +16,6 @@ from webdnn.util import console
 
 
 def main():
-    sys.setrecursionlimit(10000)  # workaround for deep copying large graph
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--backend", default="webgpu,webgl,webassembly,fallback")
     parser.add_argument("--encoding")

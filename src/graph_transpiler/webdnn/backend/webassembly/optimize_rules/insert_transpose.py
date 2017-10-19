@@ -9,6 +9,7 @@ from webdnn.graph.operators.convolution2d import Convolution2D
 from webdnn.graph.operators.deconvolution2d import Deconvolution2D
 from webdnn.graph.operators.depth2space import Depth2Space
 from webdnn.graph.operators.elementwise import Elementwise
+from webdnn.graph.operators.embedding import Embedding
 from webdnn.graph.operators.local_response_normalization import LocalResponseNormalization
 from webdnn.graph.operators.max_pooling_2d import MaxPooling2D
 from webdnn.graph.operators.reshape import Reshape
@@ -17,7 +18,7 @@ from webdnn.graph.operators.space2depth import Space2Depth
 from webdnn.graph.operators.split_axis import SplitAxis
 from webdnn.graph.operators.transpose import Transpose
 from webdnn.graph.optimize_rule import OptimizeRule
-from webdnn.graph.order import OrderNHWC, Order, OrderNC
+from webdnn.graph.order import OrderNHWC, Order, OrderNC, OrderNTC, OrderCN, OrderNT
 from webdnn.graph.variable import Variable
 
 
@@ -87,6 +88,12 @@ class InsertTranspose(OptimizeRule):
             elif isinstance(op, Reshape):
                 flag_changed |= _replace_input(op, "x", op.parameters["in_order"])
                 flag_changed |= _replace_output(op, "y", op.parameters["out_order"])
+                continue
+
+            elif isinstance(op, Embedding):
+                flag_changed |= _replace_input(op, "x", OrderNT)
+                flag_changed |= _replace_input(op, "w", OrderCN)
+                flag_changed |= _replace_output(op, "y", OrderNTC)
                 continue
 
             elif isinstance(op, (Convolution2D, Deconvolution2D,

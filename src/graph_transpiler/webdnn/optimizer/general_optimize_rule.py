@@ -5,6 +5,7 @@ from webdnn.optimizer.sub_rules.conv_filter_pruning import ConvFilterPruning
 from webdnn.optimizer.sub_rules.convolution2d_svd_compression import Convolution2DSvdCompression
 from webdnn.optimizer.sub_rules.remove_no_effect_operator import RemoveNoEffectOperator
 from webdnn.optimizer.sub_rules.remove_redundant_operator import RemoveRedundantOperator
+from webdnn.optimizer.sub_rules.replace_select import ReplaceSelect
 from webdnn.optimizer.sub_rules.simplify_elementwise import SimplifyElementwise
 from webdnn.optimizer.sub_rules.upgrade_operator_type import UpgradeOperatorType
 
@@ -19,5 +20,6 @@ class GeneralOptimizeRule(OptimizeRuleGroup):
             ConstantFolding(),
             Convolution2DSvdCompression(),
             ConvFilterPruning(),
+            ReplaceSelect(),
             UpgradeOperatorType()
         ])

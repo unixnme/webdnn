@@ -188,25 +188,9 @@ class RemoveReinterpretAxis(RemoveNoEffectOperatorBase):
         x = op.inputs["x"]
         y = op.outputs["y"]
 
-        if len(x.input_to) == 1 and x.output_from is None:
+        if x in graph.inputs and len(x.input_to) == 1:
             op.remove_all()
-
-            if isinstance(x, ConstantVariable):
-                x = ConstantVariable(x.data, y.order)
-
-                if y in graph.outputs:
-                    index = graph.outputs.index(y)
-                    graph.outputs.remove(y)
-                    graph.outputs.insert(index, x)
-
-                else:
-                    OptimizeRule.replace_variable(graph, y, x)
-            else:
-                assert x in graph.inputs
-
-                index = graph.inputs.index(x)
-                graph.inputs.remove(x)
-                graph.inputs.insert(index, y)
+            OptimizeRule.replace_variable(graph, x, y, with_assert=False)
 
             return True
 
@@ -227,10 +211,7 @@ class RemoveReinterpretAxis(RemoveNoEffectOperatorBase):
                 axis1.unify(axis2)
                 flag_changed = True
 
-        if flag_changed:
-            return True
-
-        return False
+        return flag_changed
 
 
 class RemoveElementwiseAdd(RemoveNoEffectOperatorBase):

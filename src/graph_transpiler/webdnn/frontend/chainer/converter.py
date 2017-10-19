@@ -84,6 +84,8 @@ class ChainerConverter(Converter["Function"]):
     """
 
     def __init__(self):
+        super(ChainerConverter, self).__init__()
+
         if not FLAG_CHAINER_INSTALLED:
             raise ImportError("ImportError is occurred when chainer is loaded.")
 

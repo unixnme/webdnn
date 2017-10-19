@@ -6,7 +6,7 @@ from webdnn.frontend.converter import Converter
 from webdnn.graph.axis import Axis
 from webdnn.graph.graph import Graph
 from webdnn.graph.optimize_rule import OptimizeRuleGroup
-from webdnn.graph.order import Order, OrderNC, OrderNTC, OrderNHWC, OrderC
+from webdnn.graph.order import Order
 from webdnn.graph.placeholder import Placeholder
 from webdnn.graph.variable import Variable
 from webdnn.graph.variables.attributes.input import Input
@@ -20,6 +20,7 @@ from webdnn.util import flags
 FLAG_TF_INSTALLED = True
 
 try:
+    # noinspection PyPackageRequirements, PyUnresolvedReferences
     import tensorflow as tf
 
 except ImportError as e:
@@ -28,21 +29,8 @@ except ImportError as e:
     pass
 
 
-def get_default_order(ndim: int):
-    if ndim == 1:
-        return OrderC
-
-    elif ndim == 2:
-        return OrderNC
-
-    elif ndim == 3:
-        return OrderNTC
-
-    elif ndim == 4:
-        return OrderNHWC
-
-    else:
-        raise NotImplementedError(f"Unknown default data order: (ndim)={ndim}")
+class CyclicGraphError(Exception):
+    pass
 
 
 class TensorFlowConverter(Converter["tf.Operation"]):
@@ -56,6 +44,8 @@ class TensorFlowConverter(Converter["tf.Operation"]):
     """
 
     def __init__(self, session: "tf.Session", batch_size: int = 1):
+        super(TensorFlowConverter, self).__init__()
+
         if not FLAG_TF_INSTALLED:
             raise ImportError("ImportError is occurred when Tensorflow is loaded.")
 
@@ -171,6 +161,7 @@ class TensorFlowConverter(Converter["tf.Operation"]):
 
         else:
             if order is None:
+                # noinspection PyTypeChecker
                 order = Order([AxisVar() for _ in range(data.ndim)])
 
             variable = ConstantVariable(data, order)
@@ -193,11 +184,16 @@ def _listup_operations(inputs, outputs):
         unresolved_prevs = [prev_node for prev_node in prev_nodes if prev_node not in resolved]
 
         if len(unresolved_prevs) == 0:
+            # TensorFlow allows cyclic graph (like RNN), but WebDNN doesn't.
             resolved.add(node)
             if isinstance(node, tf.Operation):
                 result.append(node)
 
         else:
+            # TensorFlow allows cyclic graph (like RNN), but WebDNN doesn't.
+            if any(n in stack for n in unresolved_prevs):
+                raise CyclicGraphError('[TensorFlowConverter] Cyclic graph is detected.')
+
             stack.append(node)
             stack += unresolved_prevs
 

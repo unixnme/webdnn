@@ -32,6 +32,7 @@ class DescriptorGenerator(Generic[T_KERNEL, T_EXEC_DATA]):
 
         Returns:
             :
+            :
         """
         key = OperatorClass.__name__
 

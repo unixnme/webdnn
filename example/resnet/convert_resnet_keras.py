@@ -5,6 +5,7 @@ Example of converting ResNet-50 Keras model
 import argparse
 import sys
 
+import keras.backend as K
 from keras.applications import resnet50
 
 from webdnn.backend import generate_descriptor
@@ -20,8 +21,6 @@ def main():
     args = parser.parse_args()
 
     model = resnet50.ResNet50(include_top=True, weights='imagenet')
-
-    sys.setrecursionlimit(10000)
     graph = KerasConverter(batch_size=1).convert(model)
     for backend in args.backend.split(","):
         graph_exec_data = generate_descriptor(backend, graph, constant_encoder_name=args.encoding)

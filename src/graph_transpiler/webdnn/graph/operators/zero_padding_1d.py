@@ -40,6 +40,8 @@ class ZeroPadding1D(Operator):
 
     def exec(self):
         x = self.inputs["x"]
+        assert x.order.check_same_axes(OrderNTC)
+
         x_shape_dict = x.shape_dict
         N = x_shape_dict[Axis.N]
         T2 = x_shape_dict[Axis.T] + self.parameters["padding"][0] + self.parameters["padding"][1]

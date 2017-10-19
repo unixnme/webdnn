@@ -1,3 +1,5 @@
+import numpy as np
+
 from webdnn.graph.graph import Graph
 from webdnn.graph.operators.elementwise import Elementwise
 from webdnn.graph.optimize_rule import OptimizeRule
@@ -29,7 +31,7 @@ class Rsqrt(Elementwise):
         x0 = self.inputs["x0"]  # type: ConstantVariable
         y = self.outputs["y"]
 
-        new_y = ConstantVariable(1 / x0.data, x0.order)
+        new_y = ConstantVariable(1 / np.sqrt(x0.data), x0.order)
         new_y.change_order(y.order)
         OptimizeRule.replace_variable(graph, y, new_y)
         self.remove_all()

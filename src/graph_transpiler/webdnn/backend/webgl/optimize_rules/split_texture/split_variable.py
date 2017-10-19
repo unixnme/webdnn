@@ -43,7 +43,7 @@ class SplitVariable(OptimizeRule):
         return graph, flag_changed
 
 
-def _split_axis(v: Variable, axis: Axis, graph):
+def _split_axis(v: Variable, axis: Axis, graph: Graph):
     """
     split variable by specified axis
     """
@@ -65,7 +65,7 @@ def _split_axis(v: Variable, axis: Axis, graph):
 
     for op in ops:
         if all(isinstance(v, ConstantVariable) for v in op.inputs.values()):
-            op.fold_constance()
+            op.fold_constance(graph)
 
         elif isinstance(op, SplitAxis):
             _split_splitaxis(graph, op, v, [v1, v2], axis)

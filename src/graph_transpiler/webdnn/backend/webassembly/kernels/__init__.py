@@ -13,12 +13,16 @@ from webdnn.backend.webassembly.kernels import elementwise_pow
 from webdnn.backend.webassembly.kernels import elu
 from webdnn.backend.webassembly.kernels import embedding
 from webdnn.backend.webassembly.kernels import exp
+from webdnn.backend.webassembly.kernels import greater
+from webdnn.backend.webassembly.kernels import greater_equal
 from webdnn.backend.webassembly.kernels import hard_sigmoid
 from webdnn.backend.webassembly.kernels import im2col
 from webdnn.backend.webassembly.kernels import leaky_relu
 from webdnn.backend.webassembly.kernels import local_response_normalization
 from webdnn.backend.webassembly.kernels import lstm
+from webdnn.backend.webassembly.kernels import max
 from webdnn.backend.webassembly.kernels import max_pooling_2d
+from webdnn.backend.webassembly.kernels import prod
 from webdnn.backend.webassembly.kernels import reinterpret_axis
 from webdnn.backend.webassembly.kernels import relu
 from webdnn.backend.webassembly.kernels import reshape
@@ -34,6 +38,7 @@ from webdnn.backend.webassembly.kernels import softplus
 from webdnn.backend.webassembly.kernels import softsign
 from webdnn.backend.webassembly.kernels import space2depth
 from webdnn.backend.webassembly.kernels import split_axis
+from webdnn.backend.webassembly.kernels import sum
 from webdnn.backend.webassembly.kernels import tanh
 from webdnn.backend.webassembly.kernels import threshold_relu
 from webdnn.backend.webassembly.kernels import tile

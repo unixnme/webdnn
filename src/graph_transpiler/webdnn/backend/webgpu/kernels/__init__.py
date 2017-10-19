@@ -13,12 +13,16 @@ from webdnn.backend.webgpu.kernels import elementwise_pow
 from webdnn.backend.webgpu.kernels import elu
 from webdnn.backend.webgpu.kernels import embedding
 from webdnn.backend.webgpu.kernels import exp
+from webdnn.backend.webgpu.kernels import greater
+from webdnn.backend.webgpu.kernels import greater_equal
 from webdnn.backend.webgpu.kernels import hard_sigmoid
 from webdnn.backend.webgpu.kernels import im2col
 from webdnn.backend.webgpu.kernels import leaky_relu
 from webdnn.backend.webgpu.kernels import local_response_normalization
 from webdnn.backend.webgpu.kernels import lstm
+from webdnn.backend.webgpu.kernels import max
 from webdnn.backend.webgpu.kernels import max_pooling_2d
+from webdnn.backend.webgpu.kernels import prod
 from webdnn.backend.webgpu.kernels import reinterpret_axis
 from webdnn.backend.webgpu.kernels import relu
 from webdnn.backend.webgpu.kernels import reshape
@@ -34,8 +38,9 @@ from webdnn.backend.webgpu.kernels import softplus
 from webdnn.backend.webgpu.kernels import softsign
 from webdnn.backend.webgpu.kernels import space2depth
 from webdnn.backend.webgpu.kernels import split_axis
+from webdnn.backend.webgpu.kernels import sum
 from webdnn.backend.webgpu.kernels import tanh
 from webdnn.backend.webgpu.kernels import threshold_relu
+from webdnn.backend.webgpu.kernels import tile
 from webdnn.backend.webgpu.kernels import transpose
 from webdnn.backend.webgpu.kernels import zero_padding_1d
-from webdnn.backend.webgpu.kernels import tile
