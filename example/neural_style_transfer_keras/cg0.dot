@@ -1,0 +1,3982 @@
+digraph webdnn_ir {
+graph [
+];
+op_Im2Col0 [label="Im2Col0
+Im2Col
+ksize=(9, 9)
+stride=(1, 1)
+padding=(4, 4)
+dilation_rate=(1, 1)", shape=box];
+var_4940297552 [
+label="Variable0
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon,style="dashed"];
+var_4940297552 -> op_Im2Col0 [label="im"];
+var_4939055680 [
+label="Variable376
+(1, 256, 256, 243)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col0 -> var_4939055680 [label="col"];
+op_Sgemm0 [label="Sgemm0
+Sgemm
+M=65536
+N=16
+K=243
+out_shape=[1, 256, 256, 16]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939055680 -> op_Sgemm0 [label="A"];
+var_4940299512 [
+label="ConstantVariable48
+(9, 9, 3, 16)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4940299512 -> op_Sgemm0 [label="B"];
+var_4939043336 [
+label="Variable2
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm0 -> var_4939043336 [label="C"];
+op_ElementwiseAdd0 [label="ElementwiseAdd0
+ElementwiseAdd
+", shape=box];
+var_4939043336 -> op_ElementwiseAdd0 [label="x0"];
+var_4939045296 [
+label="ConstantVariable47
+(16,)
+Order=[C]",shape=doubleoctagon];
+var_4939045296 -> op_ElementwiseAdd0 [label="x1"];
+var_4939045968 [
+label="Variable3
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd0 -> var_4939045968 [label="y"];
+op_Sum0 [label="Sum0
+Sum
+axis=<AxisVar W>", shape=box];
+var_4939045968 -> op_Sum0 [label="x"];
+var_4939092824 [
+label="Variable4
+(1, 256, 16)
+Order=[N, H, C]",shape=octagon];
+op_Sum0 -> var_4939092824 [label="y"];
+op_Sum1 [label="Sum1
+Sum
+axis=<AxisVar H>", shape=box];
+var_4939092824 -> op_Sum1 [label="x"];
+var_4939092040 [
+label="Variable5
+(1, 16)
+Order=[N, C]",shape=octagon];
+op_Sum1 -> var_4939092040 [label="y"];
+op_Reshape0 [label="Reshape0
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 16]", shape=box];
+var_4939092040 -> op_Reshape0 [label="x"];
+var_4939058200 [
+label="Variable6
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape0 -> var_4939058200 [label="y"];
+op_ScalarMul0 [label="ScalarMul0
+ScalarMul
+value=1.52587890625e-05", shape=box];
+var_4939058200 -> op_ScalarMul0 [label="x0"];
+var_4939056968 [
+label="Variable7
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul0 -> var_4939056968 [label="y"];
+op_ScalarAffine0 [label="ScalarAffine0
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4939056968 -> op_ScalarAffine0 [label="x0"];
+var_4939055736 [
+label="Variable8
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine0 -> var_4939055736 [label="y"];
+op_ElementwiseAdd1 [label="ElementwiseAdd1
+ElementwiseAdd
+", shape=box];
+var_4939045968 -> op_ElementwiseAdd1 [label="x0"];
+var_4939055736 -> op_ElementwiseAdd1 [label="x1"];
+var_4937347312 [
+label="Variable9
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd1 -> var_4937347312 [label="y"];
+op_ScalarPow0 [label="ScalarPow0
+ScalarPow
+value=2.0", shape=box];
+var_4937347312 -> op_ScalarPow0 [label="x0"];
+var_4938608256 [
+label="Variable10
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow0 -> var_4938608256 [label="y"];
+op_Sum2 [label="Sum2
+Sum
+axis=<AxisVar W>", shape=box];
+var_4938608256 -> op_Sum2 [label="x"];
+var_4938631264 [
+label="Variable11
+(1, 256, 16)
+Order=[N, H, C]",shape=octagon];
+op_Sum2 -> var_4938631264 [label="y"];
+op_Sum3 [label="Sum3
+Sum
+axis=<AxisVar H>", shape=box];
+var_4938631264 -> op_Sum3 [label="x"];
+var_4939398952 [
+label="Variable12
+(1, 16)
+Order=[N, C]",shape=octagon];
+op_Sum3 -> var_4939398952 [label="y"];
+op_Reshape1 [label="Reshape1
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 16]", shape=box];
+var_4939398952 -> op_Reshape1 [label="x"];
+var_4940064752 [
+label="Variable13
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape1 -> var_4940064752 [label="y"];
+op_ScalarMul1 [label="ScalarMul1
+ScalarMul
+value=1.52587890625e-05", shape=box];
+var_4940064752 -> op_ScalarMul1 [label="x0"];
+var_4939124576 [
+label="Variable14
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul1 -> var_4939124576 [label="y"];
+op_ScalarAdd0 [label="ScalarAdd0
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4939124576 -> op_ScalarAdd0 [label="x0"];
+var_4939123344 [
+label="Variable15
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd0 -> var_4939123344 [label="y"];
+op_Rsqrt0 [label="Rsqrt0
+Rsqrt
+", shape=box];
+var_4939123344 -> op_Rsqrt0 [label="x0"];
+var_4939122112 [
+label="Variable16
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt0 -> var_4939122112 [label="y"];
+op_ElementwiseMul0 [label="ElementwiseMul0
+ElementwiseMul
+", shape=box];
+var_4939122112 -> op_ElementwiseMul0 [label="x0"];
+var_4939121160 [
+label="ConstantVariable43
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4939121160 -> op_ElementwiseMul0 [label="x1"];
+var_4939095064 [
+label="Variable17
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul0 -> var_4939095064 [label="y"];
+op_ElementwiseMul1 [label="ElementwiseMul1
+ElementwiseMul
+", shape=box];
+var_4939056968 -> op_ElementwiseMul1 [label="x0"];
+var_4939095064 -> op_ElementwiseMul1 [label="x1"];
+var_4939179736 [
+label="Variable18
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul1 -> var_4939179736 [label="y"];
+op_ScalarAffine1 [label="ScalarAffine1
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4939179736 -> op_ScalarAffine1 [label="x0"];
+var_4939178504 [
+label="Variable19
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine1 -> var_4939178504 [label="y"];
+op_ElementwiseAdd2 [label="ElementwiseAdd2
+ElementwiseAdd
+", shape=box];
+var_4939141072 [
+label="ConstantVariable50
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4939141072 -> op_ElementwiseAdd2 [label="x0"];
+var_4939178504 -> op_ElementwiseAdd2 [label="x1"];
+var_4939139168 [
+label="Variable20
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd2 -> var_4939139168 [label="y"];
+op_ElementwiseMul2 [label="ElementwiseMul2
+ElementwiseMul
+", shape=box];
+var_4939045968 -> op_ElementwiseMul2 [label="x0"];
+var_4939095064 -> op_ElementwiseMul2 [label="x1"];
+var_4939137096 [
+label="Variable21
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul2 -> var_4939137096 [label="y"];
+op_ElementwiseAdd3 [label="ElementwiseAdd3
+ElementwiseAdd
+", shape=box];
+var_4939137096 -> op_ElementwiseAdd3 [label="x0"];
+var_4939139168 -> op_ElementwiseAdd3 [label="x1"];
+var_4939180408 [
+label="Variable22
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd3 -> var_4939180408 [label="y"];
+op_Relu0 [label="Relu0
+Relu
+", shape=box];
+var_4939180408 -> op_Relu0 [label="x0"];
+var_4939181752 [
+label="Variable23
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu0 -> var_4939181752 [label="y"];
+op_Im2Col1 [label="Im2Col1
+Im2Col
+ksize=(3, 3)
+stride=(2, 2)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4939181752 -> op_Im2Col1 [label="im"];
+var_4936567720 [
+label="Variable378
+(1, 128, 128, 144)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col1 -> var_4936567720 [label="col"];
+op_Sgemm1 [label="Sgemm1
+Sgemm
+M=16384
+N=32
+K=144
+out_shape=[1, 128, 128, 32]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4936567720 -> op_Sgemm1 [label="A"];
+var_4939208016 [
+label="ConstantVariable41
+(3, 3, 16, 32)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4939208016 -> op_Sgemm1 [label="B"];
+var_4939209024 [
+label="Variable25
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm1 -> var_4939209024 [label="C"];
+op_ElementwiseAdd4 [label="ElementwiseAdd4
+ElementwiseAdd
+", shape=box];
+var_4939209024 -> op_ElementwiseAdd4 [label="x0"];
+var_4939210536 [
+label="ConstantVariable40
+(32,)
+Order=[C]",shape=doubleoctagon];
+var_4939210536 -> op_ElementwiseAdd4 [label="x1"];
+var_4939231752 [
+label="Variable26
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd4 -> var_4939231752 [label="y"];
+op_Sum4 [label="Sum4
+Sum
+axis=<AxisVar W>", shape=box];
+var_4939231752 -> op_Sum4 [label="x"];
+var_4939232760 [
+label="Variable27
+(1, 128, 32)
+Order=[N, H, C]",shape=octagon];
+op_Sum4 -> var_4939232760 [label="y"];
+op_Sum5 [label="Sum5
+Sum
+axis=<AxisVar H>", shape=box];
+var_4939232760 -> op_Sum5 [label="x"];
+var_4939233656 [
+label="Variable28
+(1, 32)
+Order=[N, C]",shape=octagon];
+op_Sum5 -> var_4939233656 [label="y"];
+op_Reshape2 [label="Reshape2
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 32]", shape=box];
+var_4939233656 -> op_Reshape2 [label="x"];
+var_4939234664 [
+label="Variable29
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape2 -> var_4939234664 [label="y"];
+op_ScalarMul2 [label="ScalarMul2
+ScalarMul
+value=6.103515625e-05", shape=box];
+var_4939234664 -> op_ScalarMul2 [label="x0"];
+var_4939518696 [
+label="Variable30
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul2 -> var_4939518696 [label="y"];
+op_ScalarAffine2 [label="ScalarAffine2
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4939518696 -> op_ScalarAffine2 [label="x0"];
+var_4939630072 [
+label="Variable31
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine2 -> var_4939630072 [label="y"];
+op_ElementwiseAdd5 [label="ElementwiseAdd5
+ElementwiseAdd
+", shape=box];
+var_4939231752 -> op_ElementwiseAdd5 [label="x0"];
+var_4939630072 -> op_ElementwiseAdd5 [label="x1"];
+var_4939628616 [
+label="Variable32
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd5 -> var_4939628616 [label="y"];
+op_ScalarPow1 [label="ScalarPow1
+ScalarPow
+value=2.0", shape=box];
+var_4939628616 -> op_ScalarPow1 [label="x0"];
+var_4939590456 [
+label="Variable33
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow1 -> var_4939590456 [label="y"];
+op_Sum6 [label="Sum6
+Sum
+axis=<AxisVar W>", shape=box];
+var_4939590456 -> op_Sum6 [label="x"];
+var_4939589560 [
+label="Variable34
+(1, 128, 32)
+Order=[N, H, C]",shape=octagon];
+op_Sum6 -> var_4939589560 [label="y"];
+op_Sum7 [label="Sum7
+Sum
+axis=<AxisVar H>", shape=box];
+var_4939589560 -> op_Sum7 [label="x"];
+var_4939588776 [
+label="Variable35
+(1, 32)
+Order=[N, C]",shape=octagon];
+op_Sum7 -> var_4939588776 [label="y"];
+op_Reshape3 [label="Reshape3
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 32]", shape=box];
+var_4939588776 -> op_Reshape3 [label="x"];
+var_4939587880 [
+label="Variable36
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape3 -> var_4939587880 [label="y"];
+op_ScalarMul3 [label="ScalarMul3
+ScalarMul
+value=6.103515625e-05", shape=box];
+var_4939587880 -> op_ScalarMul3 [label="x0"];
+var_4939557912 [
+label="Variable37
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul3 -> var_4939557912 [label="y"];
+op_ScalarAdd1 [label="ScalarAdd1
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4939557912 -> op_ScalarAdd1 [label="x0"];
+var_4939556680 [
+label="Variable38
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd1 -> var_4939556680 [label="y"];
+op_Rsqrt1 [label="Rsqrt1
+Rsqrt
+", shape=box];
+var_4939556680 -> op_Rsqrt1 [label="x0"];
+var_4939555448 [
+label="Variable39
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt1 -> var_4939555448 [label="y"];
+op_ElementwiseMul3 [label="ElementwiseMul3
+ElementwiseMul
+", shape=box];
+var_4939555448 -> op_ElementwiseMul3 [label="x0"];
+var_4939521664 [
+label="ConstantVariable36
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4939521664 -> op_ElementwiseMul3 [label="x1"];
+var_4939520208 [
+label="Variable40
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul3 -> var_4939520208 [label="y"];
+op_ElementwiseMul4 [label="ElementwiseMul4
+ElementwiseMul
+", shape=box];
+var_4939518696 -> op_ElementwiseMul4 [label="x0"];
+var_4939520208 -> op_ElementwiseMul4 [label="x1"];
+var_4939699480 [
+label="Variable41
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul4 -> var_4939699480 [label="y"];
+op_ScalarAffine3 [label="ScalarAffine3
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4939699480 -> op_ScalarAffine3 [label="x0"];
+var_4939698248 [
+label="Variable42
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine3 -> var_4939698248 [label="y"];
+op_ElementwiseAdd6 [label="ElementwiseAdd6
+ElementwiseAdd
+", shape=box];
+var_4939699984 [
+label="ConstantVariable51
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4939699984 -> op_ElementwiseAdd6 [label="x0"];
+var_4939698248 -> op_ElementwiseAdd6 [label="x1"];
+var_4939679896 [
+label="Variable43
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd6 -> var_4939679896 [label="y"];
+op_ElementwiseMul5 [label="ElementwiseMul5
+ElementwiseMul
+", shape=box];
+var_4939231752 -> op_ElementwiseMul5 [label="x0"];
+var_4939520208 -> op_ElementwiseMul5 [label="x1"];
+var_4939678384 [
+label="Variable44
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul5 -> var_4939678384 [label="y"];
+op_ElementwiseAdd7 [label="ElementwiseAdd7
+ElementwiseAdd
+", shape=box];
+var_4939678384 -> op_ElementwiseAdd7 [label="x0"];
+var_4939679896 -> op_ElementwiseAdd7 [label="x1"];
+var_4939700656 [
+label="Variable45
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd7 -> var_4939700656 [label="y"];
+op_Relu1 [label="Relu1
+Relu
+", shape=box];
+var_4939700656 -> op_Relu1 [label="x0"];
+var_4939702000 [
+label="Variable46
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu1 -> var_4939702000 [label="y"];
+op_Im2Col2 [label="Im2Col2
+Im2Col
+ksize=(3, 3)
+stride=(2, 2)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4939702000 -> op_Im2Col2 [label="im"];
+var_4939093944 [
+label="Variable380
+(1, 64, 64, 288)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col2 -> var_4939093944 [label="col"];
+op_Sgemm2 [label="Sgemm2
+Sgemm
+M=4096
+N=64
+K=288
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939093944 -> op_Sgemm2 [label="A"];
+var_4939732360 [
+label="ConstantVariable34
+(3, 3, 32, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4939732360 -> op_Sgemm2 [label="B"];
+var_4939733368 [
+label="Variable48
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm2 -> var_4939733368 [label="C"];
+op_ElementwiseAdd8 [label="ElementwiseAdd8
+ElementwiseAdd
+", shape=box];
+var_4939733368 -> op_ElementwiseAdd8 [label="x0"];
+var_4939734880 [
+label="ConstantVariable33
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4939734880 -> op_ElementwiseAdd8 [label="x1"];
+var_4939756096 [
+label="Variable49
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd8 -> var_4939756096 [label="y"];
+op_Sum8 [label="Sum8
+Sum
+axis=<AxisVar W>", shape=box];
+var_4939756096 -> op_Sum8 [label="x"];
+var_4939878920 [
+label="Variable50
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum8 -> var_4939878920 [label="y"];
+op_Sum9 [label="Sum9
+Sum
+axis=<AxisVar H>", shape=box];
+var_4939878920 -> op_Sum9 [label="x"];
+var_4939833016 [
+label="Variable51
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum9 -> var_4939833016 [label="y"];
+op_Reshape4 [label="Reshape4
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4939833016 -> op_Reshape4 [label="x"];
+var_4939832120 [
+label="Variable52
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape4 -> var_4939832120 [label="y"];
+op_ScalarMul4 [label="ScalarMul4
+ScalarMul
+value=0.000244140625", shape=box];
+var_4939832120 -> op_ScalarMul4 [label="x0"];
+var_4939830888 [
+label="Variable53
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul4 -> var_4939830888 [label="y"];
+op_ScalarAffine4 [label="ScalarAffine4
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4939830888 -> op_ScalarAffine4 [label="x0"];
+var_4939829656 [
+label="Variable54
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine4 -> var_4939829656 [label="y"];
+op_ElementwiseAdd9 [label="ElementwiseAdd9
+ElementwiseAdd
+", shape=box];
+var_4939756096 -> op_ElementwiseAdd9 [label="x0"];
+var_4939829656 -> op_ElementwiseAdd9 [label="x1"];
+var_4939803560 [
+label="Variable55
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd9 -> var_4939803560 [label="y"];
+op_ScalarPow2 [label="ScalarPow2
+ScalarPow
+value=2.0", shape=box];
+var_4939803560 -> op_ScalarPow2 [label="x0"];
+var_4939802328 [
+label="Variable56
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow2 -> var_4939802328 [label="y"];
+op_Sum10 [label="Sum10
+Sum
+axis=<AxisVar W>", shape=box];
+var_4939802328 -> op_Sum10 [label="x"];
+var_4939801432 [
+label="Variable57
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum10 -> var_4939801432 [label="y"];
+op_Sum11 [label="Sum11
+Sum
+axis=<AxisVar H>", shape=box];
+var_4939801432 -> op_Sum11 [label="x"];
+var_4939800648 [
+label="Variable58
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum11 -> var_4939800648 [label="y"];
+op_Reshape5 [label="Reshape5
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4939800648 -> op_Reshape5 [label="x"];
+var_4939779208 [
+label="Variable59
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape5 -> var_4939779208 [label="y"];
+op_ScalarMul5 [label="ScalarMul5
+ScalarMul
+value=0.000244140625", shape=box];
+var_4939779208 -> op_ScalarMul5 [label="x0"];
+var_4939777976 [
+label="Variable60
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul5 -> var_4939777976 [label="y"];
+op_ScalarAdd2 [label="ScalarAdd2
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4939777976 -> op_ScalarAdd2 [label="x0"];
+var_4939776744 [
+label="Variable61
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd2 -> var_4939776744 [label="y"];
+op_Rsqrt2 [label="Rsqrt2
+Rsqrt
+", shape=box];
+var_4939776744 -> op_Rsqrt2 [label="x0"];
+var_4939759064 [
+label="Variable62
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt2 -> var_4939759064 [label="y"];
+op_ElementwiseMul6 [label="ElementwiseMul6
+ElementwiseMul
+", shape=box];
+var_4939759064 -> op_ElementwiseMul6 [label="x0"];
+var_4939759400 [
+label="ConstantVariable29
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4939759400 -> op_ElementwiseMul6 [label="x1"];
+var_4939757608 [
+label="Variable63
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul6 -> var_4939757608 [label="y"];
+op_ElementwiseMul7 [label="ElementwiseMul7
+ElementwiseMul
+", shape=box];
+var_4939830888 -> op_ElementwiseMul7 [label="x0"];
+var_4939757608 -> op_ElementwiseMul7 [label="x1"];
+var_4939881216 [
+label="Variable64
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul7 -> var_4939881216 [label="y"];
+op_ScalarAffine5 [label="ScalarAffine5
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4939881216 -> op_ScalarAffine5 [label="x0"];
+var_4939915392 [
+label="Variable65
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine5 -> var_4939915392 [label="y"];
+op_ElementwiseAdd10 [label="ElementwiseAdd10
+ElementwiseAdd
+", shape=box];
+var_4939917352 [
+label="ConstantVariable52
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4939917352 -> op_ElementwiseAdd10 [label="x0"];
+var_4939915392 -> op_ElementwiseAdd10 [label="x1"];
+var_4939917912 [
+label="Variable66
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd10 -> var_4939917912 [label="y"];
+op_ElementwiseMul8 [label="ElementwiseMul8
+ElementwiseMul
+", shape=box];
+var_4939756096 -> op_ElementwiseMul8 [label="x0"];
+var_4939757608 -> op_ElementwiseMul8 [label="x1"];
+var_4939935872 [
+label="Variable67
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul8 -> var_4939935872 [label="y"];
+op_ElementwiseAdd11 [label="ElementwiseAdd11
+ElementwiseAdd
+", shape=box];
+var_4939935872 -> op_ElementwiseAdd11 [label="x0"];
+var_4939917912 -> op_ElementwiseAdd11 [label="x1"];
+var_4939936320 [
+label="Variable68
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd11 -> var_4939936320 [label="y"];
+op_Relu2 [label="Relu2
+Relu
+", shape=box];
+var_4939936320 -> op_Relu2 [label="x0"];
+var_4939937664 [
+label="Variable69
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu2 -> var_4939937664 [label="y"];
+op_Im2Col3 [label="Im2Col3
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4939937664 -> op_Im2Col3 [label="im"];
+var_4707362128 [
+label="Variable382
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col3 -> var_4707362128 [label="col"];
+op_Sgemm3 [label="Sgemm3
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4707362128 -> op_Sgemm3 [label="A"];
+var_4707361344 [
+label="ConstantVariable65
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4707361344 -> op_Sgemm3 [label="B"];
+var_4707314656 [
+label="Variable71
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm3 -> var_4707314656 [label="C"];
+op_ElementwiseAdd12 [label="ElementwiseAdd12
+ElementwiseAdd
+", shape=box];
+var_4707314656 -> op_ElementwiseAdd12 [label="x0"];
+var_4707362296 [
+label="ConstantVariable64
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4707362296 -> op_ElementwiseAdd12 [label="x1"];
+var_4707313200 [
+label="Variable72
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd12 -> var_4707313200 [label="y"];
+op_Sum12 [label="Sum12
+Sum
+axis=<AxisVar W>", shape=box];
+var_4707313200 -> op_Sum12 [label="x"];
+var_4707312304 [
+label="Variable73
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum12 -> var_4707312304 [label="y"];
+op_Sum13 [label="Sum13
+Sum
+axis=<AxisVar H>", shape=box];
+var_4707312304 -> op_Sum13 [label="x"];
+var_4707270496 [
+label="Variable74
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum13 -> var_4707270496 [label="y"];
+op_Reshape6 [label="Reshape6
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4707270496 -> op_Reshape6 [label="x"];
+var_4707269600 [
+label="Variable75
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape6 -> var_4707269600 [label="y"];
+op_ScalarMul6 [label="ScalarMul6
+ScalarMul
+value=0.000244140625", shape=box];
+var_4707269600 -> op_ScalarMul6 [label="x0"];
+var_4707268368 [
+label="Variable76
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul6 -> var_4707268368 [label="y"];
+op_ScalarAffine6 [label="ScalarAffine6
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4707268368 -> op_ScalarAffine6 [label="x0"];
+var_4707267136 [
+label="Variable77
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine6 -> var_4707267136 [label="y"];
+op_ElementwiseAdd13 [label="ElementwiseAdd13
+ElementwiseAdd
+", shape=box];
+var_4707313200 -> op_ElementwiseAdd13 [label="x0"];
+var_4707267136 -> op_ElementwiseAdd13 [label="x1"];
+var_4707228752 [
+label="Variable78
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd13 -> var_4707228752 [label="y"];
+op_ScalarPow3 [label="ScalarPow3
+ScalarPow
+value=2.0", shape=box];
+var_4707228752 -> op_ScalarPow3 [label="x0"];
+var_4707227520 [
+label="Variable79
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow3 -> var_4707227520 [label="y"];
+op_Sum14 [label="Sum14
+Sum
+axis=<AxisVar W>", shape=box];
+var_4707227520 -> op_Sum14 [label="x"];
+var_4707226624 [
+label="Variable80
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum14 -> var_4707226624 [label="y"];
+op_Sum15 [label="Sum15
+Sum
+axis=<AxisVar H>", shape=box];
+var_4707226624 -> op_Sum15 [label="x"];
+var_4707225840 [
+label="Variable81
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum15 -> var_4707225840 [label="y"];
+op_Reshape7 [label="Reshape7
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4707225840 -> op_Reshape7 [label="x"];
+var_4707204400 [
+label="Variable82
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape7 -> var_4707204400 [label="y"];
+op_ScalarMul7 [label="ScalarMul7
+ScalarMul
+value=0.000244140625", shape=box];
+var_4707204400 -> op_ScalarMul7 [label="x0"];
+var_4707203168 [
+label="Variable83
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul7 -> var_4707203168 [label="y"];
+op_ScalarAdd3 [label="ScalarAdd3
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4707203168 -> op_ScalarAdd3 [label="x0"];
+var_4707201936 [
+label="Variable84
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd3 -> var_4707201936 [label="y"];
+op_Rsqrt3 [label="Rsqrt3
+Rsqrt
+", shape=box];
+var_4707201936 -> op_Rsqrt3 [label="x0"];
+var_4707167872 [
+label="Variable85
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt3 -> var_4707167872 [label="y"];
+op_ElementwiseMul9 [label="ElementwiseMul9
+ElementwiseMul
+", shape=box];
+var_4707167872 -> op_ElementwiseMul9 [label="x0"];
+var_4707729816 [
+label="ConstantVariable60
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4707729816 -> op_ElementwiseMul9 [label="x1"];
+var_4707166416 [
+label="Variable86
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul9 -> var_4707166416 [label="y"];
+op_ElementwiseMul10 [label="ElementwiseMul10
+ElementwiseMul
+", shape=box];
+var_4707268368 -> op_ElementwiseMul10 [label="x0"];
+var_4707166416 -> op_ElementwiseMul10 [label="x1"];
+var_4707364312 [
+label="Variable87
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul10 -> var_4707364312 [label="y"];
+op_ScalarAffine7 [label="ScalarAffine7
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4707364312 -> op_ScalarAffine7 [label="x0"];
+var_4707386200 [
+label="Variable88
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine7 -> var_4707386200 [label="y"];
+op_ElementwiseAdd14 [label="ElementwiseAdd14
+ElementwiseAdd
+", shape=box];
+var_4707388160 [
+label="ConstantVariable67
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4707388160 -> op_ElementwiseAdd14 [label="x0"];
+var_4707386200 -> op_ElementwiseAdd14 [label="x1"];
+var_4707388720 [
+label="Variable89
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd14 -> var_4707388720 [label="y"];
+op_ElementwiseMul11 [label="ElementwiseMul11
+ElementwiseMul
+", shape=box];
+var_4707313200 -> op_ElementwiseMul11 [label="x0"];
+var_4707166416 -> op_ElementwiseMul11 [label="x1"];
+var_4707164960 [
+label="Variable90
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul11 -> var_4707164960 [label="y"];
+op_ElementwiseAdd15 [label="ElementwiseAdd15
+ElementwiseAdd
+", shape=box];
+var_4707164960 -> op_ElementwiseAdd15 [label="x0"];
+var_4707388720 -> op_ElementwiseAdd15 [label="x1"];
+var_4940008752 [
+label="Variable91
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd15 -> var_4940008752 [label="y"];
+op_Relu3 [label="Relu3
+Relu
+", shape=box];
+var_4940008752 -> op_Relu3 [label="x0"];
+var_4940007520 [
+label="Variable92
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu3 -> var_4940007520 [label="y"];
+op_Im2Col4 [label="Im2Col4
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4940007520 -> op_Im2Col4 [label="im"];
+var_4940006568 [
+label="Variable384
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col4 -> var_4940006568 [label="col"];
+op_Sgemm4 [label="Sgemm4
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4940006568 -> op_Sgemm4 [label="A"];
+var_4940005784 [
+label="ConstantVariable58
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4940005784 -> op_Sgemm4 [label="B"];
+var_4939972280 [
+label="Variable94
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm4 -> var_4939972280 [label="C"];
+op_ElementwiseAdd16 [label="ElementwiseAdd16
+ElementwiseAdd
+", shape=box];
+var_4939972280 -> op_ElementwiseAdd16 [label="x0"];
+var_4707731216 [
+label="ConstantVariable57
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4707731216 -> op_ElementwiseAdd16 [label="x1"];
+var_4939970824 [
+label="Variable95
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd16 -> var_4939970824 [label="y"];
+op_Sum16 [label="Sum16
+Sum
+axis=<AxisVar W>", shape=box];
+var_4939970824 -> op_Sum16 [label="x"];
+var_4707757752 [
+label="Variable96
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum16 -> var_4707757752 [label="y"];
+op_Sum17 [label="Sum17
+Sum
+axis=<AxisVar H>", shape=box];
+var_4707757752 -> op_Sum17 [label="x"];
+var_4707756968 [
+label="Variable97
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum17 -> var_4707756968 [label="y"];
+op_Reshape8 [label="Reshape8
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4707756968 -> op_Reshape8 [label="x"];
+var_4707756072 [
+label="Variable98
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape8 -> var_4707756072 [label="y"];
+op_ScalarMul8 [label="ScalarMul8
+ScalarMul
+value=0.000244140625", shape=box];
+var_4707756072 -> op_ScalarMul8 [label="x0"];
+var_4707754840 [
+label="Variable99
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul8 -> var_4707754840 [label="y"];
+op_ScalarAffine8 [label="ScalarAffine8
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4707754840 -> op_ScalarAffine8 [label="x0"];
+var_4707733064 [
+label="Variable100
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine8 -> var_4707733064 [label="y"];
+op_ElementwiseAdd17 [label="ElementwiseAdd17
+ElementwiseAdd
+", shape=box];
+var_4939970824 -> op_ElementwiseAdd17 [label="x0"];
+var_4707733064 -> op_ElementwiseAdd17 [label="x1"];
+var_4707831536 [
+label="Variable101
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd17 -> var_4707831536 [label="y"];
+op_ScalarPow4 [label="ScalarPow4
+ScalarPow
+value=2.0", shape=box];
+var_4707831536 -> op_ScalarPow4 [label="x0"];
+var_4707830304 [
+label="Variable102
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow4 -> var_4707830304 [label="y"];
+op_Sum18 [label="Sum18
+Sum
+axis=<AxisVar W>", shape=box];
+var_4707830304 -> op_Sum18 [label="x"];
+var_4707829408 [
+label="Variable103
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum18 -> var_4707829408 [label="y"];
+op_Sum19 [label="Sum19
+Sum
+axis=<AxisVar H>", shape=box];
+var_4707829408 -> op_Sum19 [label="x"];
+var_4707828624 [
+label="Variable104
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum19 -> var_4707828624 [label="y"];
+op_Reshape9 [label="Reshape9
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4707828624 -> op_Reshape9 [label="x"];
+var_4707815376 [
+label="Variable105
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape9 -> var_4707815376 [label="y"];
+op_ScalarMul9 [label="ScalarMul9
+ScalarMul
+value=0.000244140625", shape=box];
+var_4707815376 -> op_ScalarMul9 [label="x0"];
+var_4707814144 [
+label="Variable106
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul9 -> var_4707814144 [label="y"];
+op_ScalarAdd4 [label="ScalarAdd4
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4707814144 -> op_ScalarAdd4 [label="x0"];
+var_4707812912 [
+label="Variable107
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd4 -> var_4707812912 [label="y"];
+op_Rsqrt4 [label="Rsqrt4
+Rsqrt
+", shape=box];
+var_4707812912 -> op_Rsqrt4 [label="x0"];
+var_4707811680 [
+label="Variable108
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt4 -> var_4707811680 [label="y"];
+op_ElementwiseMul12 [label="ElementwiseMul12
+ElementwiseMul
+", shape=box];
+var_4707811680 -> op_ElementwiseMul12 [label="x0"];
+var_4707781992 [
+label="ConstantVariable53
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4707781992 -> op_ElementwiseMul12 [label="x1"];
+var_4707780536 [
+label="Variable109
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul12 -> var_4707780536 [label="y"];
+op_ElementwiseMul13 [label="ElementwiseMul13
+ElementwiseMul
+", shape=box];
+var_4707754840 -> op_ElementwiseMul13 [label="x0"];
+var_4707780536 -> op_ElementwiseMul13 [label="x1"];
+var_4707844896 [
+label="Variable110
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul13 -> var_4707844896 [label="y"];
+op_ScalarAffine9 [label="ScalarAffine9
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4707844896 -> op_ScalarAffine9 [label="x0"];
+var_4707846240 [
+label="Variable111
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine9 -> var_4707846240 [label="y"];
+op_ElementwiseAdd18 [label="ElementwiseAdd18
+ElementwiseAdd
+", shape=box];
+var_4707889224 [
+label="ConstantVariable68
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4707889224 -> op_ElementwiseAdd18 [label="x0"];
+var_4707846240 -> op_ElementwiseAdd18 [label="x1"];
+var_4707889784 [
+label="Variable112
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd18 -> var_4707889784 [label="y"];
+op_ElementwiseMul14 [label="ElementwiseMul14
+ElementwiseMul
+", shape=box];
+var_4939970824 -> op_ElementwiseMul14 [label="x0"];
+var_4707780536 -> op_ElementwiseMul14 [label="x1"];
+var_4939969368 [
+label="Variable113
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul14 -> var_4939969368 [label="y"];
+op_ElementwiseAdd19 [label="ElementwiseAdd19
+ElementwiseAdd
+", shape=box];
+var_4939969368 -> op_ElementwiseAdd19 [label="x0"];
+var_4707889784 -> op_ElementwiseAdd19 [label="x1"];
+var_4939939176 [
+label="Variable114
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd19 -> var_4939939176 [label="y"];
+op_ElementwiseAdd20 [label="ElementwiseAdd20
+ElementwiseAdd
+", shape=box];
+var_4939939176 -> op_ElementwiseAdd20 [label="x0"];
+var_4939937664 -> op_ElementwiseAdd20 [label="x1"];
+var_4707890512 [
+label="Variable115
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd20 -> var_4707890512 [label="y"];
+op_Im2Col5 [label="Im2Col5
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4707890512 -> op_Im2Col5 [label="im"];
+var_4940297384 [
+label="Variable386
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col5 -> var_4940297384 [label="col"];
+op_Sgemm5 [label="Sgemm5
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4940297384 -> op_Sgemm5 [label="A"];
+var_4707892136 [
+label="ConstantVariable81
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4707892136 -> op_Sgemm5 [label="B"];
+var_4707893144 [
+label="Variable117
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm5 -> var_4707893144 [label="C"];
+op_ElementwiseAdd21 [label="ElementwiseAdd21
+ElementwiseAdd
+", shape=box];
+var_4707893144 -> op_ElementwiseAdd21 [label="x0"];
+var_4707919296 [
+label="ConstantVariable80
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4707919296 -> op_ElementwiseAdd21 [label="x1"];
+var_4707919968 [
+label="Variable118
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd21 -> var_4707919968 [label="y"];
+op_Sum20 [label="Sum20
+Sum
+axis=<AxisVar W>", shape=box];
+var_4707919968 -> op_Sum20 [label="x"];
+var_4708173864 [
+label="Variable119
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum20 -> var_4708173864 [label="y"];
+op_Sum21 [label="Sum21
+Sum
+axis=<AxisVar H>", shape=box];
+var_4708173864 -> op_Sum21 [label="x"];
+var_4708173080 [
+label="Variable120
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum21 -> var_4708173080 [label="y"];
+op_Reshape10 [label="Reshape10
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4708173080 -> op_Reshape10 [label="x"];
+var_4708172184 [
+label="Variable121
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape10 -> var_4708172184 [label="y"];
+op_ScalarMul10 [label="ScalarMul10
+ScalarMul
+value=0.000244140625", shape=box];
+var_4708172184 -> op_ScalarMul10 [label="x0"];
+var_4708146312 [
+label="Variable122
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul10 -> var_4708146312 [label="y"];
+op_ScalarAffine10 [label="ScalarAffine10
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4708146312 -> op_ScalarAffine10 [label="x0"];
+var_4708145080 [
+label="Variable123
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine10 -> var_4708145080 [label="y"];
+op_ElementwiseAdd22 [label="ElementwiseAdd22
+ElementwiseAdd
+", shape=box];
+var_4707919968 -> op_ElementwiseAdd22 [label="x0"];
+var_4708145080 -> op_ElementwiseAdd22 [label="x1"];
+var_4708143624 [
+label="Variable124
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd22 -> var_4708143624 [label="y"];
+op_ScalarPow5 [label="ScalarPow5
+ScalarPow
+value=2.0", shape=box];
+var_4708143624 -> op_ScalarPow5 [label="x0"];
+var_4707978488 [
+label="Variable125
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow5 -> var_4707978488 [label="y"];
+op_Sum22 [label="Sum22
+Sum
+axis=<AxisVar W>", shape=box];
+var_4707978488 -> op_Sum22 [label="x"];
+var_4707977592 [
+label="Variable126
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum22 -> var_4707977592 [label="y"];
+op_Sum23 [label="Sum23
+Sum
+axis=<AxisVar H>", shape=box];
+var_4707977592 -> op_Sum23 [label="x"];
+var_4707976808 [
+label="Variable127
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum23 -> var_4707976808 [label="y"];
+op_Reshape11 [label="Reshape11
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4707976808 -> op_Reshape11 [label="x"];
+var_4707975912 [
+label="Variable128
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape11 -> var_4707975912 [label="y"];
+op_ScalarMul11 [label="ScalarMul11
+ScalarMul
+value=0.000244140625", shape=box];
+var_4707975912 -> op_ScalarMul11 [label="x0"];
+var_4707945944 [
+label="Variable129
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul11 -> var_4707945944 [label="y"];
+op_ScalarAdd5 [label="ScalarAdd5
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4707945944 -> op_ScalarAdd5 [label="x0"];
+var_4707944712 [
+label="Variable130
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd5 -> var_4707944712 [label="y"];
+op_Rsqrt5 [label="Rsqrt5
+Rsqrt
+", shape=box];
+var_4707944712 -> op_Rsqrt5 [label="x0"];
+var_4707943480 [
+label="Variable131
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt5 -> var_4707943480 [label="y"];
+op_ElementwiseMul15 [label="ElementwiseMul15
+ElementwiseMul
+", shape=box];
+var_4707943480 -> op_ElementwiseMul15 [label="x0"];
+var_4707943816 [
+label="ConstantVariable76
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4707943816 -> op_ElementwiseMul15 [label="x1"];
+var_4707921480 [
+label="Variable132
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul15 -> var_4707921480 [label="y"];
+op_ElementwiseMul16 [label="ElementwiseMul16
+ElementwiseMul
+", shape=box];
+var_4708146312 -> op_ElementwiseMul16 [label="x0"];
+var_4707921480 -> op_ElementwiseMul16 [label="x1"];
+var_4708204896 [
+label="Variable133
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul16 -> var_4708204896 [label="y"];
+op_ScalarAffine11 [label="ScalarAffine11
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4708204896 -> op_ScalarAffine11 [label="x0"];
+var_4708206240 [
+label="Variable134
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine11 -> var_4708206240 [label="y"];
+op_ElementwiseAdd23 [label="ElementwiseAdd23
+ElementwiseAdd
+", shape=box];
+var_4708208200 [
+label="ConstantVariable83
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4708208200 -> op_ElementwiseAdd23 [label="x0"];
+var_4708206240 -> op_ElementwiseAdd23 [label="x1"];
+var_4708229304 [
+label="Variable135
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd23 -> var_4708229304 [label="y"];
+op_ElementwiseMul17 [label="ElementwiseMul17
+ElementwiseMul
+", shape=box];
+var_4707919968 -> op_ElementwiseMul17 [label="x0"];
+var_4707921480 -> op_ElementwiseMul17 [label="x1"];
+var_4708230816 [
+label="Variable136
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul17 -> var_4708230816 [label="y"];
+op_ElementwiseAdd24 [label="ElementwiseAdd24
+ElementwiseAdd
+", shape=box];
+var_4708230816 -> op_ElementwiseAdd24 [label="x0"];
+var_4708229304 -> op_ElementwiseAdd24 [label="x1"];
+var_4708231264 [
+label="Variable137
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd24 -> var_4708231264 [label="y"];
+op_Relu4 [label="Relu4
+Relu
+", shape=box];
+var_4708231264 -> op_Relu4 [label="x0"];
+var_4708232608 [
+label="Variable138
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu4 -> var_4708232608 [label="y"];
+op_Im2Col6 [label="Im2Col6
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4708232608 -> op_Im2Col6 [label="im"];
+var_4940299960 [
+label="Variable388
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col6 -> var_4940299960 [label="col"];
+op_Sgemm6 [label="Sgemm6
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4940299960 -> op_Sgemm6 [label="A"];
+var_4708254776 [
+label="ConstantVariable74
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4708254776 -> op_Sgemm6 [label="B"];
+var_4708255784 [
+label="Variable140
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm6 -> var_4708255784 [label="C"];
+op_ElementwiseAdd25 [label="ElementwiseAdd25
+ElementwiseAdd
+", shape=box];
+var_4708255784 -> op_ElementwiseAdd25 [label="x0"];
+var_4708257296 [
+label="ConstantVariable73
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4708257296 -> op_ElementwiseAdd25 [label="x1"];
+var_4708286704 [
+label="Variable141
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd25 -> var_4708286704 [label="y"];
+op_Sum24 [label="Sum24
+Sum
+axis=<AxisVar W>", shape=box];
+var_4708286704 -> op_Sum24 [label="x"];
+var_4708325192 [
+label="Variable142
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum24 -> var_4708325192 [label="y"];
+op_Sum25 [label="Sum25
+Sum
+axis=<AxisVar H>", shape=box];
+var_4708325192 -> op_Sum25 [label="x"];
+var_4708324408 [
+label="Variable143
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum25 -> var_4708324408 [label="y"];
+op_Reshape12 [label="Reshape12
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4708324408 -> op_Reshape12 [label="x"];
+var_4708323512 [
+label="Variable144
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape12 -> var_4708323512 [label="y"];
+op_ScalarMul12 [label="ScalarMul12
+ScalarMul
+value=0.000244140625", shape=box];
+var_4708323512 -> op_ScalarMul12 [label="x0"];
+var_4708289448 [
+label="Variable145
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul12 -> var_4708289448 [label="y"];
+op_ScalarAffine12 [label="ScalarAffine12
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4708289448 -> op_ScalarAffine12 [label="x0"];
+var_4708288216 [
+label="Variable146
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine12 -> var_4708288216 [label="y"];
+op_ElementwiseAdd26 [label="ElementwiseAdd26
+ElementwiseAdd
+", shape=box];
+var_4708286704 -> op_ElementwiseAdd26 [label="x0"];
+var_4708288216 -> op_ElementwiseAdd26 [label="x1"];
+var_4941555584 [
+label="Variable147
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd26 -> var_4941555584 [label="y"];
+op_ScalarPow6 [label="ScalarPow6
+ScalarPow
+value=2.0", shape=box];
+var_4941555584 -> op_ScalarPow6 [label="x0"];
+var_4941554352 [
+label="Variable148
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow6 -> var_4941554352 [label="y"];
+op_Sum26 [label="Sum26
+Sum
+axis=<AxisVar W>", shape=box];
+var_4941554352 -> op_Sum26 [label="x"];
+var_4708380400 [
+label="Variable149
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum26 -> var_4708380400 [label="y"];
+op_Sum27 [label="Sum27
+Sum
+axis=<AxisVar H>", shape=box];
+var_4708380400 -> op_Sum27 [label="x"];
+var_4708379616 [
+label="Variable150
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum27 -> var_4708379616 [label="y"];
+op_Reshape13 [label="Reshape13
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4708379616 -> op_Reshape13 [label="x"];
+var_4708378720 [
+label="Variable151
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape13 -> var_4708378720 [label="y"];
+op_ScalarMul13 [label="ScalarMul13
+ScalarMul
+value=0.000244140625", shape=box];
+var_4708378720 -> op_ScalarMul13 [label="x0"];
+var_4708377488 [
+label="Variable152
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul13 -> var_4708377488 [label="y"];
+op_ScalarAdd6 [label="ScalarAdd6
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4708377488 -> op_ScalarAdd6 [label="x0"];
+var_4708363904 [
+label="Variable153
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd6 -> var_4708363904 [label="y"];
+op_Rsqrt6 [label="Rsqrt6
+Rsqrt
+", shape=box];
+var_4708363904 -> op_Rsqrt6 [label="x0"];
+var_4708362672 [
+label="Variable154
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt6 -> var_4708362672 [label="y"];
+op_ElementwiseMul18 [label="ElementwiseMul18
+ElementwiseMul
+", shape=box];
+var_4708362672 -> op_ElementwiseMul18 [label="x0"];
+var_4708361720 [
+label="ConstantVariable69
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4708361720 -> op_ElementwiseMul18 [label="x1"];
+var_4708360264 [
+label="Variable155
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul18 -> var_4708360264 [label="y"];
+op_ElementwiseMul19 [label="ElementwiseMul19
+ElementwiseMul
+", shape=box];
+var_4708289448 -> op_ElementwiseMul19 [label="x0"];
+var_4708360264 -> op_ElementwiseMul19 [label="x1"];
+var_4941556200 [
+label="Variable156
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul19 -> var_4941556200 [label="y"];
+op_ScalarAffine13 [label="ScalarAffine13
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4941556200 -> op_ScalarAffine13 [label="x0"];
+var_4708377376 [
+label="Variable157
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine13 -> var_4708377376 [label="y"];
+op_ElementwiseAdd27 [label="ElementwiseAdd27
+ElementwiseAdd
+", shape=box];
+var_4941554296 [
+label="ConstantVariable84
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4941554296 -> op_ElementwiseAdd27 [label="x0"];
+var_4708377376 -> op_ElementwiseAdd27 [label="x1"];
+var_4708377656 [
+label="Variable158
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd27 -> var_4708377656 [label="y"];
+op_ElementwiseMul20 [label="ElementwiseMul20
+ElementwiseMul
+", shape=box];
+var_4708286704 -> op_ElementwiseMul20 [label="x0"];
+var_4708360264 -> op_ElementwiseMul20 [label="x1"];
+var_4708379168 [
+label="Variable159
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul20 -> var_4708379168 [label="y"];
+op_ElementwiseAdd28 [label="ElementwiseAdd28
+ElementwiseAdd
+", shape=box];
+var_4708379168 -> op_ElementwiseAdd28 [label="x0"];
+var_4708377656 -> op_ElementwiseAdd28 [label="x1"];
+var_4708378384 [
+label="Variable160
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd28 -> var_4708378384 [label="y"];
+op_ElementwiseAdd29 [label="ElementwiseAdd29
+ElementwiseAdd
+", shape=box];
+var_4708378384 -> op_ElementwiseAdd29 [label="x0"];
+var_4707890512 -> op_ElementwiseAdd29 [label="x1"];
+var_4941555696 [
+label="Variable161
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd29 -> var_4941555696 [label="y"];
+op_Im2Col7 [label="Im2Col7
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4941555696 -> op_Im2Col7 [label="im"];
+var_4940298784 [
+label="Variable390
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col7 -> var_4940298784 [label="col"];
+op_Sgemm7 [label="Sgemm7
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4940298784 -> op_Sgemm7 [label="A"];
+var_4941652488 [
+label="ConstantVariable97
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4941652488 -> op_Sgemm7 [label="B"];
+var_4941652264 [
+label="Variable163
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm7 -> var_4941652264 [label="C"];
+op_ElementwiseAdd30 [label="ElementwiseAdd30
+ElementwiseAdd
+", shape=box];
+var_4941652264 -> op_ElementwiseAdd30 [label="x0"];
+var_4941652432 [
+label="ConstantVariable96
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4941652432 -> op_ElementwiseAdd30 [label="x1"];
+var_4941653552 [
+label="Variable164
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd30 -> var_4941653552 [label="y"];
+op_Sum28 [label="Sum28
+Sum
+axis=<AxisVar W>", shape=box];
+var_4941653552 -> op_Sum28 [label="x"];
+var_4941785072 [
+label="Variable165
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum28 -> var_4941785072 [label="y"];
+op_Sum29 [label="Sum29
+Sum
+axis=<AxisVar H>", shape=box];
+var_4941785072 -> op_Sum29 [label="x"];
+var_4941784400 [
+label="Variable166
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum29 -> var_4941784400 [label="y"];
+op_Reshape14 [label="Reshape14
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4941784400 -> op_Reshape14 [label="x"];
+var_4941783448 [
+label="Variable167
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape14 -> var_4941783448 [label="y"];
+op_ScalarMul14 [label="ScalarMul14
+ScalarMul
+value=0.000244140625", shape=box];
+var_4941783448 -> op_ScalarMul14 [label="x0"];
+var_4941737432 [
+label="Variable168
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul14 -> var_4941737432 [label="y"];
+op_ScalarAffine14 [label="ScalarAffine14
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4941737432 -> op_ScalarAffine14 [label="x0"];
+var_4941735080 [
+label="Variable169
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine14 -> var_4941735080 [label="y"];
+op_ElementwiseAdd31 [label="ElementwiseAdd31
+ElementwiseAdd
+", shape=box];
+var_4941653552 -> op_ElementwiseAdd31 [label="x0"];
+var_4941735080 -> op_ElementwiseAdd31 [label="x1"];
+var_4941735528 [
+label="Variable170
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd31 -> var_4941735528 [label="y"];
+op_ScalarPow7 [label="ScalarPow7
+ScalarPow
+value=2.0", shape=box];
+var_4941735528 -> op_ScalarPow7 [label="x0"];
+var_4941734688 [
+label="Variable171
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow7 -> var_4941734688 [label="y"];
+op_Sum30 [label="Sum30
+Sum
+axis=<AxisVar W>", shape=box];
+var_4941734688 -> op_Sum30 [label="x"];
+var_4941734128 [
+label="Variable172
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum30 -> var_4941734128 [label="y"];
+op_Sum31 [label="Sum31
+Sum
+axis=<AxisVar H>", shape=box];
+var_4941734128 -> op_Sum31 [label="x"];
+var_4941692432 [
+label="Variable173
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum31 -> var_4941692432 [label="y"];
+op_Reshape15 [label="Reshape15
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4941692432 -> op_Reshape15 [label="x"];
+var_4941691480 [
+label="Variable174
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape15 -> var_4941691480 [label="y"];
+op_ScalarMul15 [label="ScalarMul15
+ScalarMul
+value=0.000244140625", shape=box];
+var_4941691480 -> op_ScalarMul15 [label="x0"];
+var_4941690584 [
+label="Variable175
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul15 -> var_4941690584 [label="y"];
+op_ScalarAdd7 [label="ScalarAdd7
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4941690584 -> op_ScalarAdd7 [label="x0"];
+var_4941689688 [
+label="Variable176
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd7 -> var_4941689688 [label="y"];
+op_Rsqrt7 [label="Rsqrt7
+Rsqrt
+", shape=box];
+var_4941689688 -> op_Rsqrt7 [label="x0"];
+var_4941654392 [
+label="Variable177
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt7 -> var_4941654392 [label="y"];
+op_ElementwiseMul21 [label="ElementwiseMul21
+ElementwiseMul
+", shape=box];
+var_4941654392 -> op_ElementwiseMul21 [label="x0"];
+var_4941655736 [
+label="ConstantVariable92
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4941655736 -> op_ElementwiseMul21 [label="x1"];
+var_4941653272 [
+label="Variable178
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul21 -> var_4941653272 [label="y"];
+op_ElementwiseMul22 [label="ElementwiseMul22
+ElementwiseMul
+", shape=box];
+var_4941737432 -> op_ElementwiseMul22 [label="x0"];
+var_4941653272 -> op_ElementwiseMul22 [label="x1"];
+var_4941785296 [
+label="Variable179
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul22 -> var_4941785296 [label="y"];
+op_ScalarAffine15 [label="ScalarAffine15
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4941785296 -> op_ScalarAffine15 [label="x0"];
+var_4941785408 [
+label="Variable180
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine15 -> var_4941785408 [label="y"];
+op_ElementwiseAdd32 [label="ElementwiseAdd32
+ElementwiseAdd
+", shape=box];
+var_4941785520 [
+label="ConstantVariable99
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4941785520 -> op_ElementwiseAdd32 [label="x0"];
+var_4941785408 -> op_ElementwiseAdd32 [label="x1"];
+var_4941787088 [
+label="Variable181
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd32 -> var_4941787088 [label="y"];
+op_ElementwiseMul23 [label="ElementwiseMul23
+ElementwiseMul
+", shape=box];
+var_4941653552 -> op_ElementwiseMul23 [label="x0"];
+var_4941653272 -> op_ElementwiseMul23 [label="x1"];
+var_4941996664 [
+label="Variable182
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul23 -> var_4941996664 [label="y"];
+op_ElementwiseAdd33 [label="ElementwiseAdd33
+ElementwiseAdd
+", shape=box];
+var_4941996664 -> op_ElementwiseAdd33 [label="x0"];
+var_4941787088 -> op_ElementwiseAdd33 [label="x1"];
+var_4941996944 [
+label="Variable183
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd33 -> var_4941996944 [label="y"];
+op_Relu5 [label="Relu5
+Relu
+", shape=box];
+var_4941996944 -> op_Relu5 [label="x0"];
+var_4941998064 [
+label="Variable184
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu5 -> var_4941998064 [label="y"];
+op_Im2Col8 [label="Im2Col8
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4941998064 -> op_Im2Col8 [label="im"];
+var_4939181640 [
+label="Variable392
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col8 -> var_4939181640 [label="col"];
+op_Sgemm8 [label="Sgemm8
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939181640 -> op_Sgemm8 [label="A"];
+var_4941999576 [
+label="ConstantVariable90
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4941999576 -> op_Sgemm8 [label="B"];
+var_4941999408 [
+label="Variable186
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm8 -> var_4941999408 [label="C"];
+op_ElementwiseAdd34 [label="ElementwiseAdd34
+ElementwiseAdd
+", shape=box];
+var_4941999408 -> op_ElementwiseAdd34 [label="x0"];
+var_4942049576 [
+label="ConstantVariable89
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4942049576 -> op_ElementwiseAdd34 [label="x1"];
+var_4942049856 [
+label="Variable187
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd34 -> var_4942049856 [label="y"];
+op_Sum32 [label="Sum32
+Sum
+axis=<AxisVar W>", shape=box];
+var_4942049856 -> op_Sum32 [label="x"];
+var_4942201856 [
+label="Variable188
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum32 -> var_4942201856 [label="y"];
+op_Sum33 [label="Sum33
+Sum
+axis=<AxisVar H>", shape=box];
+var_4942201856 -> op_Sum33 [label="x"];
+var_4942201184 [
+label="Variable189
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum33 -> var_4942201184 [label="y"];
+op_Reshape16 [label="Reshape16
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4942201184 -> op_Reshape16 [label="x"];
+var_4942163304 [
+label="Variable190
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape16 -> var_4942163304 [label="y"];
+op_ScalarMul16 [label="ScalarMul16
+ScalarMul
+value=0.000244140625", shape=box];
+var_4942163304 -> op_ScalarMul16 [label="x0"];
+var_4942162408 [
+label="Variable191
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul16 -> var_4942162408 [label="y"];
+op_ScalarAffine16 [label="ScalarAffine16
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4942162408 -> op_ScalarAffine16 [label="x0"];
+var_4942160056 [
+label="Variable192
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine16 -> var_4942160056 [label="y"];
+op_ElementwiseAdd35 [label="ElementwiseAdd35
+ElementwiseAdd
+", shape=box];
+var_4942049856 -> op_ElementwiseAdd35 [label="x0"];
+var_4942160056 -> op_ElementwiseAdd35 [label="x1"];
+var_4942160504 [
+label="Variable193
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd35 -> var_4942160504 [label="y"];
+op_ScalarPow8 [label="ScalarPow8
+ScalarPow
+value=2.0", shape=box];
+var_4942160504 -> op_ScalarPow8 [label="x0"];
+var_4942106352 [
+label="Variable194
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow8 -> var_4942106352 [label="y"];
+op_Sum34 [label="Sum34
+Sum
+axis=<AxisVar W>", shape=box];
+var_4942106352 -> op_Sum34 [label="x"];
+var_4942105792 [
+label="Variable195
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum34 -> var_4942105792 [label="y"];
+op_Sum35 [label="Sum35
+Sum
+axis=<AxisVar H>", shape=box];
+var_4942105792 -> op_Sum35 [label="x"];
+var_4942105120 [
+label="Variable196
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum35 -> var_4942105120 [label="y"];
+op_Reshape17 [label="Reshape17
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4942105120 -> op_Reshape17 [label="x"];
+var_4942104168 [
+label="Variable197
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape17 -> var_4942104168 [label="y"];
+op_ScalarMul17 [label="ScalarMul17
+ScalarMul
+value=0.000244140625", shape=box];
+var_4942104168 -> op_ScalarMul17 [label="x0"];
+var_4942103272 [
+label="Variable198
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul17 -> var_4942103272 [label="y"];
+op_ScalarAdd8 [label="ScalarAdd8
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4942103272 -> op_ScalarAdd8 [label="x0"];
+var_4942053160 [
+label="Variable199
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd8 -> var_4942053160 [label="y"];
+op_Rsqrt8 [label="Rsqrt8
+Rsqrt
+", shape=box];
+var_4942053160 -> op_Rsqrt8 [label="x0"];
+var_4942050696 [
+label="Variable200
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt8 -> var_4942050696 [label="y"];
+op_ElementwiseMul24 [label="ElementwiseMul24
+ElementwiseMul
+", shape=box];
+var_4942050696 -> op_ElementwiseMul24 [label="x0"];
+var_4942053048 [
+label="ConstantVariable85
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4942053048 -> op_ElementwiseMul24 [label="x1"];
+var_4942049520 [
+label="Variable201
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul24 -> var_4942049520 [label="y"];
+op_ElementwiseMul25 [label="ElementwiseMul25
+ElementwiseMul
+", shape=box];
+var_4942162408 -> op_ElementwiseMul25 [label="x0"];
+var_4942049520 -> op_ElementwiseMul25 [label="x1"];
+var_4942200904 [
+label="Variable202
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul25 -> var_4942200904 [label="y"];
+op_ScalarAffine17 [label="ScalarAffine17
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4942200904 -> op_ScalarAffine17 [label="x0"];
+var_4942202192 [
+label="Variable203
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine17 -> var_4942202192 [label="y"];
+op_ElementwiseAdd36 [label="ElementwiseAdd36
+ElementwiseAdd
+", shape=box];
+var_4942201016 [
+label="ConstantVariable100
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4942201016 -> op_ElementwiseAdd36 [label="x0"];
+var_4942202192 -> op_ElementwiseAdd36 [label="x1"];
+var_4942203872 [
+label="Variable204
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd36 -> var_4942203872 [label="y"];
+op_ElementwiseMul26 [label="ElementwiseMul26
+ElementwiseMul
+", shape=box];
+var_4942049856 -> op_ElementwiseMul26 [label="x0"];
+var_4942049520 -> op_ElementwiseMul26 [label="x1"];
+var_4942203088 [
+label="Variable205
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul26 -> var_4942203088 [label="y"];
+op_ElementwiseAdd37 [label="ElementwiseAdd37
+ElementwiseAdd
+", shape=box];
+var_4942203088 -> op_ElementwiseAdd37 [label="x0"];
+var_4942203872 -> op_ElementwiseAdd37 [label="x1"];
+var_4942204768 [
+label="Variable206
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd37 -> var_4942204768 [label="y"];
+op_ElementwiseAdd38 [label="ElementwiseAdd38
+ElementwiseAdd
+", shape=box];
+var_4942204768 -> op_ElementwiseAdd38 [label="x0"];
+var_4941555696 -> op_ElementwiseAdd38 [label="x1"];
+var_4942263016 [
+label="Variable207
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd38 -> var_4942263016 [label="y"];
+op_Im2Col9 [label="Im2Col9
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4942263016 -> op_Im2Col9 [label="im"];
+var_4939181976 [
+label="Variable394
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col9 -> var_4939181976 [label="col"];
+op_Sgemm9 [label="Sgemm9
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939181976 -> op_Sgemm9 [label="A"];
+var_4942264920 [
+label="ConstantVariable113
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4942264920 -> op_Sgemm9 [label="B"];
+var_4942264752 [
+label="Variable209
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm9 -> var_4942264752 [label="C"];
+op_ElementwiseAdd39 [label="ElementwiseAdd39
+ElementwiseAdd
+", shape=box];
+var_4942264752 -> op_ElementwiseAdd39 [label="x0"];
+var_4942264864 [
+label="ConstantVariable112
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4942264864 -> op_ElementwiseAdd39 [label="x1"];
+var_4942265984 [
+label="Variable210
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd39 -> var_4942265984 [label="y"];
+op_Sum36 [label="Sum36
+Sum
+axis=<AxisVar W>", shape=box];
+var_4942265984 -> op_Sum36 [label="x"];
+var_4942356944 [
+label="Variable211
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum36 -> var_4942356944 [label="y"];
+op_Sum37 [label="Sum37
+Sum
+axis=<AxisVar H>", shape=box];
+var_4942356944 -> op_Sum37 [label="x"];
+var_4942323440 [
+label="Variable212
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum37 -> var_4942323440 [label="y"];
+op_Reshape18 [label="Reshape18
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4942323440 -> op_Reshape18 [label="x"];
+var_4942322488 [
+label="Variable213
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape18 -> var_4942322488 [label="y"];
+op_ScalarMul18 [label="ScalarMul18
+ScalarMul
+value=0.000244140625", shape=box];
+var_4942322488 -> op_ScalarMul18 [label="x0"];
+var_4942321592 [
+label="Variable214
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul18 -> var_4942321592 [label="y"];
+op_ScalarAffine18 [label="ScalarAffine18
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4942321592 -> op_ScalarAffine18 [label="x0"];
+var_4942320304 [
+label="Variable215
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine18 -> var_4942320304 [label="y"];
+op_ElementwiseAdd40 [label="ElementwiseAdd40
+ElementwiseAdd
+", shape=box];
+var_4942265984 -> op_ElementwiseAdd40 [label="x0"];
+var_4942320304 -> op_ElementwiseAdd40 [label="x1"];
+var_4942428984 [
+label="Variable216
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd40 -> var_4942428984 [label="y"];
+op_ScalarPow9 [label="ScalarPow9
+ScalarPow
+value=2.0", shape=box];
+var_4942428984 -> op_ScalarPow9 [label="x0"];
+var_4942428144 [
+label="Variable217
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow9 -> var_4942428144 [label="y"];
+op_Sum38 [label="Sum38
+Sum
+axis=<AxisVar W>", shape=box];
+var_4942428144 -> op_Sum38 [label="x"];
+var_4942427584 [
+label="Variable218
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum38 -> var_4942427584 [label="y"];
+op_Sum39 [label="Sum39
+Sum
+axis=<AxisVar H>", shape=box];
+var_4942427584 -> op_Sum39 [label="x"];
+var_4942426912 [
+label="Variable219
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum39 -> var_4942426912 [label="y"];
+op_Reshape19 [label="Reshape19
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4942426912 -> op_Reshape19 [label="x"];
+var_4942360360 [
+label="Variable220
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape19 -> var_4942360360 [label="y"];
+op_ScalarMul19 [label="ScalarMul19
+ScalarMul
+value=0.000244140625", shape=box];
+var_4942360360 -> op_ScalarMul19 [label="x0"];
+var_4942359464 [
+label="Variable221
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul19 -> var_4942359464 [label="y"];
+op_ScalarAdd9 [label="ScalarAdd9
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4942359464 -> op_ScalarAdd9 [label="x0"];
+var_4942358568 [
+label="Variable222
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd9 -> var_4942358568 [label="y"];
+op_Rsqrt9 [label="Rsqrt9
+Rsqrt
+", shape=box];
+var_4942358568 -> op_Rsqrt9 [label="x0"];
+var_4942356832 [
+label="Variable223
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt9 -> var_4942356832 [label="y"];
+op_ElementwiseMul27 [label="ElementwiseMul27
+ElementwiseMul
+", shape=box];
+var_4942356832 -> op_ElementwiseMul27 [label="x0"];
+var_4942358456 [
+label="ConstantVariable108
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4942358456 -> op_ElementwiseMul27 [label="x1"];
+var_4942319800 [
+label="Variable224
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul27 -> var_4942319800 [label="y"];
+op_ElementwiseMul28 [label="ElementwiseMul28
+ElementwiseMul
+", shape=box];
+var_4942321592 -> op_ElementwiseMul28 [label="x0"];
+var_4942319800 -> op_ElementwiseMul28 [label="x1"];
+var_4942655728 [
+label="Variable225
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul28 -> var_4942655728 [label="y"];
+op_ScalarAffine19 [label="ScalarAffine19
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4942655728 -> op_ScalarAffine19 [label="x0"];
+var_4942428032 [
+label="Variable226
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine19 -> var_4942428032 [label="y"];
+op_ElementwiseAdd41 [label="ElementwiseAdd41
+ElementwiseAdd
+", shape=box];
+var_4942428872 [
+label="ConstantVariable115
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4942428872 -> op_ElementwiseAdd41 [label="x0"];
+var_4942428032 -> op_ElementwiseAdd41 [label="x1"];
+var_4942427640 [
+label="Variable227
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd41 -> var_4942427640 [label="y"];
+op_ElementwiseMul29 [label="ElementwiseMul29
+ElementwiseMul
+", shape=box];
+var_4942265984 -> op_ElementwiseMul29 [label="x0"];
+var_4942319800 -> op_ElementwiseMul29 [label="x1"];
+var_4942360248 [
+label="Variable228
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul29 -> var_4942360248 [label="y"];
+op_ElementwiseAdd42 [label="ElementwiseAdd42
+ElementwiseAdd
+", shape=box];
+var_4942360248 -> op_ElementwiseAdd42 [label="x0"];
+var_4942427640 -> op_ElementwiseAdd42 [label="x1"];
+var_4942426240 [
+label="Variable229
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd42 -> var_4942426240 [label="y"];
+op_Relu6 [label="Relu6
+Relu
+", shape=box];
+var_4942426240 -> op_Relu6 [label="x0"];
+var_4942427304 [
+label="Variable230
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu6 -> var_4942427304 [label="y"];
+op_Im2Col10 [label="Im2Col10
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4942427304 -> op_Im2Col10 [label="im"];
+var_4939208576 [
+label="Variable396
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col10 -> var_4939208576 [label="col"];
+op_Sgemm10 [label="Sgemm10
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939208576 -> op_Sgemm10 [label="A"];
+var_4942657464 [
+label="ConstantVariable106
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4942657464 -> op_Sgemm10 [label="B"];
+var_4942657296 [
+label="Variable232
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm10 -> var_4942657296 [label="C"];
+op_ElementwiseAdd43 [label="ElementwiseAdd43
+ElementwiseAdd
+", shape=box];
+var_4942657296 -> op_ElementwiseAdd43 [label="x0"];
+var_4942657408 [
+label="ConstantVariable105
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4942657408 -> op_ElementwiseAdd43 [label="x1"];
+var_4942658528 [
+label="Variable233
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd43 -> var_4942658528 [label="y"];
+op_Sum40 [label="Sum40
+Sum
+axis=<AxisVar W>", shape=box];
+var_4942658528 -> op_Sum40 [label="x"];
+var_4942713016 [
+label="Variable234
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum40 -> var_4942713016 [label="y"];
+op_Sum41 [label="Sum41
+Sum
+axis=<AxisVar H>", shape=box];
+var_4942713016 -> op_Sum41 [label="x"];
+var_4942713856 [
+label="Variable235
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum41 -> var_4942713856 [label="y"];
+op_Reshape20 [label="Reshape20
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4942713856 -> op_Reshape20 [label="x"];
+var_4942714584 [
+label="Variable236
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape20 -> var_4942714584 [label="y"];
+op_ScalarMul20 [label="ScalarMul20
+ScalarMul
+value=0.000244140625", shape=box];
+var_4942714584 -> op_ScalarMul20 [label="x0"];
+var_4942715256 [
+label="Variable237
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul20 -> var_4942715256 [label="y"];
+op_ScalarAffine20 [label="ScalarAffine20
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4942715256 -> op_ScalarAffine20 [label="x0"];
+var_4942804584 [
+label="Variable238
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine20 -> var_4942804584 [label="y"];
+op_ElementwiseAdd44 [label="ElementwiseAdd44
+ElementwiseAdd
+", shape=box];
+var_4942658528 -> op_ElementwiseAdd44 [label="x0"];
+var_4942804584 -> op_ElementwiseAdd44 [label="x1"];
+var_4942805032 [
+label="Variable239
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd44 -> var_4942805032 [label="y"];
+op_ScalarPow10 [label="ScalarPow10
+ScalarPow
+value=2.0", shape=box];
+var_4942805032 -> op_ScalarPow10 [label="x0"];
+var_4942804192 [
+label="Variable240
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow10 -> var_4942804192 [label="y"];
+op_Sum42 [label="Sum42
+Sum
+axis=<AxisVar W>", shape=box];
+var_4942804192 -> op_Sum42 [label="x"];
+var_4942803632 [
+label="Variable241
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum42 -> var_4942803632 [label="y"];
+op_Sum43 [label="Sum43
+Sum
+axis=<AxisVar H>", shape=box];
+var_4942803632 -> op_Sum43 [label="x"];
+var_4942757840 [
+label="Variable242
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum43 -> var_4942757840 [label="y"];
+op_Reshape21 [label="Reshape21
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4942757840 -> op_Reshape21 [label="x"];
+var_4942756888 [
+label="Variable243
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape21 -> var_4942756888 [label="y"];
+op_ScalarMul21 [label="ScalarMul21
+ScalarMul
+value=0.000244140625", shape=box];
+var_4942756888 -> op_ScalarMul21 [label="x0"];
+var_4942755992 [
+label="Variable244
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul21 -> var_4942755992 [label="y"];
+op_ScalarAdd10 [label="ScalarAdd10
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4942755992 -> op_ScalarAdd10 [label="x0"];
+var_4942755096 [
+label="Variable245
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd10 -> var_4942755096 [label="y"];
+op_Rsqrt10 [label="Rsqrt10
+Rsqrt
+", shape=box];
+var_4942755096 -> op_Rsqrt10 [label="x0"];
+var_4942715704 [
+label="Variable246
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt10 -> var_4942715704 [label="y"];
+op_ElementwiseMul30 [label="ElementwiseMul30
+ElementwiseMul
+", shape=box];
+var_4942715704 -> op_ElementwiseMul30 [label="x0"];
+var_4942754088 [
+label="ConstantVariable101
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4942754088 -> op_ElementwiseMul30 [label="x1"];
+var_4942714808 [
+label="Variable247
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul30 -> var_4942714808 [label="y"];
+op_ElementwiseMul31 [label="ElementwiseMul31
+ElementwiseMul
+", shape=box];
+var_4942715256 -> op_ElementwiseMul31 [label="x0"];
+var_4942714808 -> op_ElementwiseMul31 [label="x1"];
+var_4942848296 [
+label="Variable248
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul31 -> var_4942848296 [label="y"];
+op_ScalarAffine21 [label="ScalarAffine21
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4942848296 -> op_ScalarAffine21 [label="x0"];
+var_4942804920 [
+label="Variable249
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine21 -> var_4942804920 [label="y"];
+op_ElementwiseAdd45 [label="ElementwiseAdd45
+ElementwiseAdd
+", shape=box];
+var_4942804752 [
+label="ConstantVariable116
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4942804752 -> op_ElementwiseAdd45 [label="x0"];
+var_4942804920 -> op_ElementwiseAdd45 [label="x1"];
+var_4942716656 [
+label="Variable250
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd45 -> var_4942716656 [label="y"];
+op_ElementwiseMul32 [label="ElementwiseMul32
+ElementwiseMul
+", shape=box];
+var_4942658528 -> op_ElementwiseMul32 [label="x0"];
+var_4942714808 -> op_ElementwiseMul32 [label="x1"];
+var_4942754648 [
+label="Variable251
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul32 -> var_4942754648 [label="y"];
+op_ElementwiseAdd46 [label="ElementwiseAdd46
+ElementwiseAdd
+", shape=box];
+var_4942754648 -> op_ElementwiseAdd46 [label="x0"];
+var_4942716656 -> op_ElementwiseAdd46 [label="x1"];
+var_4942756440 [
+label="Variable252
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd46 -> var_4942756440 [label="y"];
+op_ElementwiseAdd47 [label="ElementwiseAdd47
+ElementwiseAdd
+", shape=box];
+var_4942756440 -> op_ElementwiseAdd47 [label="x0"];
+var_4942263016 -> op_ElementwiseAdd47 [label="x1"];
+var_4942806824 [
+label="Variable253
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd47 -> var_4942806824 [label="y"];
+op_Im2Col11 [label="Im2Col11
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4942806824 -> op_Im2Col11 [label="im"];
+var_4939207288 [
+label="Variable398
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col11 -> var_4939207288 [label="col"];
+op_Sgemm11 [label="Sgemm11
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939207288 -> op_Sgemm11 [label="A"];
+var_4942850312 [
+label="ConstantVariable129
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4942850312 -> op_Sgemm11 [label="B"];
+var_4942850144 [
+label="Variable255
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm11 -> var_4942850144 [label="C"];
+op_ElementwiseAdd48 [label="ElementwiseAdd48
+ElementwiseAdd
+", shape=box];
+var_4942850144 -> op_ElementwiseAdd48 [label="x0"];
+var_4942850256 [
+label="ConstantVariable128
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4942850256 -> op_ElementwiseAdd48 [label="x1"];
+var_4942851376 [
+label="Variable256
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd48 -> var_4942851376 [label="y"];
+op_Sum44 [label="Sum44
+Sum
+axis=<AxisVar W>", shape=box];
+var_4942851376 -> op_Sum44 [label="x"];
+var_4943183600 [
+label="Variable257
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum44 -> var_4943183600 [label="y"];
+op_Sum45 [label="Sum45
+Sum
+axis=<AxisVar H>", shape=box];
+var_4943183600 -> op_Sum45 [label="x"];
+var_4943182928 [
+label="Variable258
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum45 -> var_4943182928 [label="y"];
+op_Reshape22 [label="Reshape22
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4943182928 -> op_Reshape22 [label="x"];
+var_4943181976 [
+label="Variable259
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape22 -> var_4943181976 [label="y"];
+op_ScalarMul22 [label="ScalarMul22
+ScalarMul
+value=0.000244140625", shape=box];
+var_4943181976 -> op_ScalarMul22 [label="x0"];
+var_4943181080 [
+label="Variable260
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul22 -> var_4943181080 [label="y"];
+op_ScalarAffine22 [label="ScalarAffine22
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4943181080 -> op_ScalarAffine22 [label="x0"];
+var_4943125416 [
+label="Variable261
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine22 -> var_4943125416 [label="y"];
+op_ElementwiseAdd49 [label="ElementwiseAdd49
+ElementwiseAdd
+", shape=box];
+var_4942851376 -> op_ElementwiseAdd49 [label="x0"];
+var_4943125416 -> op_ElementwiseAdd49 [label="x1"];
+var_4943125864 [
+label="Variable262
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd49 -> var_4943125864 [label="y"];
+op_ScalarPow11 [label="ScalarPow11
+ScalarPow
+value=2.0", shape=box];
+var_4943125864 -> op_ScalarPow11 [label="x0"];
+var_4943125024 [
+label="Variable263
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow11 -> var_4943125024 [label="y"];
+op_Sum46 [label="Sum46
+Sum
+axis=<AxisVar W>", shape=box];
+var_4943125024 -> op_Sum46 [label="x"];
+var_4943124464 [
+label="Variable264
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum46 -> var_4943124464 [label="y"];
+op_Sum47 [label="Sum47
+Sum
+axis=<AxisVar H>", shape=box];
+var_4943124464 -> op_Sum47 [label="x"];
+var_4943123792 [
+label="Variable265
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum47 -> var_4943123792 [label="y"];
+op_Reshape23 [label="Reshape23
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4943123792 -> op_Reshape23 [label="x"];
+var_4943122840 [
+label="Variable266
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape23 -> var_4943122840 [label="y"];
+op_ScalarMul23 [label="ScalarMul23
+ScalarMul
+value=0.000244140625", shape=box];
+var_4943122840 -> op_ScalarMul23 [label="x0"];
+var_4943113688 [
+label="Variable267
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul23 -> var_4943113688 [label="y"];
+op_ScalarAdd11 [label="ScalarAdd11
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4943113688 -> op_ScalarAdd11 [label="x0"];
+var_4943112792 [
+label="Variable268
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd11 -> var_4943112792 [label="y"];
+op_Rsqrt11 [label="Rsqrt11
+Rsqrt
+", shape=box];
+var_4943112792 -> op_Rsqrt11 [label="x0"];
+var_4943110328 [
+label="Variable269
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt11 -> var_4943110328 [label="y"];
+op_ElementwiseMul33 [label="ElementwiseMul33
+ElementwiseMul
+", shape=box];
+var_4943110328 -> op_ElementwiseMul33 [label="x0"];
+var_4943112680 [
+label="ConstantVariable124
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4943112680 -> op_ElementwiseMul33 [label="x1"];
+var_4943110496 [
+label="Variable270
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul33 -> var_4943110496 [label="y"];
+op_ElementwiseMul34 [label="ElementwiseMul34
+ElementwiseMul
+", shape=box];
+var_4943181080 -> op_ElementwiseMul34 [label="x0"];
+var_4943110496 -> op_ElementwiseMul34 [label="x1"];
+var_4943183824 [
+label="Variable271
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul34 -> var_4943183824 [label="y"];
+op_ScalarAffine23 [label="ScalarAffine23
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4943183824 -> op_ScalarAffine23 [label="x0"];
+var_4943224960 [
+label="Variable272
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine23 -> var_4943224960 [label="y"];
+op_ElementwiseAdd50 [label="ElementwiseAdd50
+ElementwiseAdd
+", shape=box];
+var_4943225912 [
+label="ConstantVariable131
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4943225912 -> op_ElementwiseAdd50 [label="x0"];
+var_4943224960 -> op_ElementwiseAdd50 [label="x1"];
+var_4943225800 [
+label="Variable273
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd50 -> var_4943225800 [label="y"];
+op_ElementwiseMul35 [label="ElementwiseMul35
+ElementwiseMul
+", shape=box];
+var_4942851376 -> op_ElementwiseMul35 [label="x0"];
+var_4943110496 -> op_ElementwiseMul35 [label="x1"];
+var_4943225856 [
+label="Variable274
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul35 -> var_4943225856 [label="y"];
+op_ElementwiseAdd51 [label="ElementwiseAdd51
+ElementwiseAdd
+", shape=box];
+var_4943225856 -> op_ElementwiseAdd51 [label="x0"];
+var_4943225800 -> op_ElementwiseAdd51 [label="x1"];
+var_4943227536 [
+label="Variable275
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd51 -> var_4943227536 [label="y"];
+op_Relu7 [label="Relu7
+Relu
+", shape=box];
+var_4943227536 -> op_Relu7 [label="x0"];
+var_4943228656 [
+label="Variable276
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu7 -> var_4943228656 [label="y"];
+op_Im2Col12 [label="Im2Col12
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4943228656 -> op_Im2Col12 [label="im"];
+var_4939207456 [
+label="Variable400
+(1, 64, 64, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col12 -> var_4939207456 [label="col"];
+op_Sgemm12 [label="Sgemm12
+Sgemm
+M=4096
+N=64
+K=576
+out_shape=[1, 64, 64, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939207456 -> op_Sgemm12 [label="A"];
+var_4943451416 [
+label="ConstantVariable122
+(3, 3, 64, 64)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4943451416 -> op_Sgemm12 [label="B"];
+var_4943451248 [
+label="Variable278
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm12 -> var_4943451248 [label="C"];
+op_ElementwiseAdd52 [label="ElementwiseAdd52
+ElementwiseAdd
+", shape=box];
+var_4943451248 -> op_ElementwiseAdd52 [label="x0"];
+var_4943451360 [
+label="ConstantVariable121
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4943451360 -> op_ElementwiseAdd52 [label="x1"];
+var_4943452480 [
+label="Variable279
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd52 -> var_4943452480 [label="y"];
+op_Sum48 [label="Sum48
+Sum
+axis=<AxisVar W>", shape=box];
+var_4943452480 -> op_Sum48 [label="x"];
+var_4943600384 [
+label="Variable280
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum48 -> var_4943600384 [label="y"];
+op_Sum49 [label="Sum49
+Sum
+axis=<AxisVar H>", shape=box];
+var_4943600384 -> op_Sum49 [label="x"];
+var_4943599712 [
+label="Variable281
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum49 -> var_4943599712 [label="y"];
+op_Reshape24 [label="Reshape24
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4943599712 -> op_Reshape24 [label="x"];
+var_4943598760 [
+label="Variable282
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape24 -> var_4943598760 [label="y"];
+op_ScalarMul24 [label="ScalarMul24
+ScalarMul
+value=0.000244140625", shape=box];
+var_4943598760 -> op_ScalarMul24 [label="x0"];
+var_4943597864 [
+label="Variable283
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul24 -> var_4943597864 [label="y"];
+op_ScalarAffine24 [label="ScalarAffine24
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4943597864 -> op_ScalarAffine24 [label="x0"];
+var_4943538104 [
+label="Variable284
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine24 -> var_4943538104 [label="y"];
+op_ElementwiseAdd53 [label="ElementwiseAdd53
+ElementwiseAdd
+", shape=box];
+var_4943452480 -> op_ElementwiseAdd53 [label="x0"];
+var_4943538104 -> op_ElementwiseAdd53 [label="x1"];
+var_4943538552 [
+label="Variable285
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd53 -> var_4943538552 [label="y"];
+op_ScalarPow12 [label="ScalarPow12
+ScalarPow
+value=2.0", shape=box];
+var_4943538552 -> op_ScalarPow12 [label="x0"];
+var_4943537712 [
+label="Variable286
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow12 -> var_4943537712 [label="y"];
+op_Sum50 [label="Sum50
+Sum
+axis=<AxisVar W>", shape=box];
+var_4943537712 -> op_Sum50 [label="x"];
+var_4943537152 [
+label="Variable287
+(1, 64, 64)
+Order=[N, H, C]",shape=octagon];
+op_Sum50 -> var_4943537152 [label="y"];
+op_Sum51 [label="Sum51
+Sum
+axis=<AxisVar H>", shape=box];
+var_4943537152 -> op_Sum51 [label="x"];
+var_4943536480 [
+label="Variable288
+(1, 64)
+Order=[N, C]",shape=octagon];
+op_Sum51 -> var_4943536480 [label="y"];
+op_Reshape25 [label="Reshape25
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 64]", shape=box];
+var_4943536480 -> op_Reshape25 [label="x"];
+var_4943486312 [
+label="Variable289
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape25 -> var_4943486312 [label="y"];
+op_ScalarMul25 [label="ScalarMul25
+ScalarMul
+value=0.000244140625", shape=box];
+var_4943486312 -> op_ScalarMul25 [label="x0"];
+var_4943485416 [
+label="Variable290
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul25 -> var_4943485416 [label="y"];
+op_ScalarAdd12 [label="ScalarAdd12
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4943485416 -> op_ScalarAdd12 [label="x0"];
+var_4943484520 [
+label="Variable291
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd12 -> var_4943484520 [label="y"];
+op_Rsqrt12 [label="Rsqrt12
+Rsqrt
+", shape=box];
+var_4943484520 -> op_Rsqrt12 [label="x0"];
+var_4943483232 [
+label="Variable292
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt12 -> var_4943483232 [label="y"];
+op_ElementwiseMul36 [label="ElementwiseMul36
+ElementwiseMul
+", shape=box];
+var_4943483232 -> op_ElementwiseMul36 [label="x0"];
+var_4943484408 [
+label="ConstantVariable117
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4943484408 -> op_ElementwiseMul36 [label="x1"];
+var_4943452200 [
+label="Variable293
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul36 -> var_4943452200 [label="y"];
+op_ElementwiseMul37 [label="ElementwiseMul37
+ElementwiseMul
+", shape=box];
+var_4943597864 -> op_ElementwiseMul37 [label="x0"];
+var_4943452200 -> op_ElementwiseMul37 [label="x1"];
+var_4943600608 [
+label="Variable294
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul37 -> var_4943600608 [label="y"];
+op_ScalarAffine25 [label="ScalarAffine25
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4943600608 -> op_ScalarAffine25 [label="x0"];
+var_4943600720 [
+label="Variable295
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine25 -> var_4943600720 [label="y"];
+op_ElementwiseAdd54 [label="ElementwiseAdd54
+ElementwiseAdd
+", shape=box];
+var_4943667272 [
+label="ConstantVariable132
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4943667272 -> op_ElementwiseAdd54 [label="x0"];
+var_4943600720 -> op_ElementwiseAdd54 [label="x1"];
+var_4943667496 [
+label="Variable296
+(1, 1, 1, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd54 -> var_4943667496 [label="y"];
+op_ElementwiseMul38 [label="ElementwiseMul38
+ElementwiseMul
+", shape=box];
+var_4943452480 -> op_ElementwiseMul38 [label="x0"];
+var_4943452200 -> op_ElementwiseMul38 [label="x1"];
+var_4943668616 [
+label="Variable297
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul38 -> var_4943668616 [label="y"];
+op_ElementwiseAdd55 [label="ElementwiseAdd55
+ElementwiseAdd
+", shape=box];
+var_4943668616 -> op_ElementwiseAdd55 [label="x0"];
+var_4943667496 -> op_ElementwiseAdd55 [label="x1"];
+var_4943668896 [
+label="Variable298
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd55 -> var_4943668896 [label="y"];
+op_ElementwiseAdd56 [label="ElementwiseAdd56
+ElementwiseAdd
+", shape=box];
+var_4943668896 -> op_ElementwiseAdd56 [label="x0"];
+var_4942806824 -> op_ElementwiseAdd56 [label="x1"];
+var_4943668448 [
+label="Variable299
+(1, 64, 64, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd56 -> var_4943668448 [label="y"];
+op_Resize2D0 [label="Resize2D0
+Resize2D
+axis1=<Axis H>
+axis2=<Axis W>
+size1=128
+size2=128", shape=box];
+var_4943668448 -> op_Resize2D0 [label="x"];
+var_4943670912 [
+label="Variable302
+(1, 128, 128, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Resize2D0 -> var_4943670912 [label="y"];
+op_Im2Col13 [label="Im2Col13
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4943670912 -> op_Im2Col13 [label="im"];
+var_4939207344 [
+label="Variable402
+(1, 128, 128, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col13 -> var_4939207344 [label="col"];
+op_Sgemm13 [label="Sgemm13
+Sgemm
+M=16384
+N=32
+K=576
+out_shape=[1, 128, 128, 32]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939207344 -> op_Sgemm13 [label="A"];
+var_4943852488 [
+label="ConstantVariable23
+(3, 3, 64, 32)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4943852488 -> op_Sgemm13 [label="B"];
+var_4943852264 [
+label="Variable304
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm13 -> var_4943852264 [label="C"];
+op_ElementwiseAdd57 [label="ElementwiseAdd57
+ElementwiseAdd
+", shape=box];
+var_4943852264 -> op_ElementwiseAdd57 [label="x0"];
+var_4943852432 [
+label="ConstantVariable22
+(32,)
+Order=[C]",shape=doubleoctagon];
+var_4943852432 -> op_ElementwiseAdd57 [label="x1"];
+var_4943853552 [
+label="Variable305
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd57 -> var_4943853552 [label="y"];
+op_Sum52 [label="Sum52
+Sum
+axis=<AxisVar W>", shape=box];
+var_4943853552 -> op_Sum52 [label="x"];
+var_4944013744 [
+label="Variable306
+(1, 128, 32)
+Order=[N, H, C]",shape=octagon];
+op_Sum52 -> var_4944013744 [label="y"];
+op_Sum53 [label="Sum53
+Sum
+axis=<AxisVar H>", shape=box];
+var_4944013744 -> op_Sum53 [label="x"];
+var_4944013072 [
+label="Variable307
+(1, 32)
+Order=[N, C]",shape=octagon];
+op_Sum53 -> var_4944013072 [label="y"];
+op_Reshape26 [label="Reshape26
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 32]", shape=box];
+var_4944013072 -> op_Reshape26 [label="x"];
+var_4944012120 [
+label="Variable308
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape26 -> var_4944012120 [label="y"];
+op_ScalarMul26 [label="ScalarMul26
+ScalarMul
+value=6.103515625e-05", shape=box];
+var_4944012120 -> op_ScalarMul26 [label="x0"];
+var_4943966104 [
+label="Variable309
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul26 -> var_4943966104 [label="y"];
+op_ScalarAffine26 [label="ScalarAffine26
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4943966104 -> op_ScalarAffine26 [label="x0"];
+var_4943963752 [
+label="Variable310
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine26 -> var_4943963752 [label="y"];
+op_ElementwiseAdd58 [label="ElementwiseAdd58
+ElementwiseAdd
+", shape=box];
+var_4943853552 -> op_ElementwiseAdd58 [label="x0"];
+var_4943963752 -> op_ElementwiseAdd58 [label="x1"];
+var_4943964200 [
+label="Variable311
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd58 -> var_4943964200 [label="y"];
+op_ScalarPow13 [label="ScalarPow13
+ScalarPow
+value=2.0", shape=box];
+var_4943964200 -> op_ScalarPow13 [label="x0"];
+var_4943963360 [
+label="Variable312
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow13 -> var_4943963360 [label="y"];
+op_Sum54 [label="Sum54
+Sum
+axis=<AxisVar W>", shape=box];
+var_4943963360 -> op_Sum54 [label="x"];
+var_4943962800 [
+label="Variable313
+(1, 128, 32)
+Order=[N, H, C]",shape=octagon];
+op_Sum54 -> var_4943962800 [label="y"];
+op_Sum55 [label="Sum55
+Sum
+axis=<AxisVar H>", shape=box];
+var_4943962800 -> op_Sum55 [label="x"];
+var_4943912912 [
+label="Variable314
+(1, 32)
+Order=[N, C]",shape=octagon];
+op_Sum55 -> var_4943912912 [label="y"];
+op_Reshape27 [label="Reshape27
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 32]", shape=box];
+var_4943912912 -> op_Reshape27 [label="x"];
+var_4943911960 [
+label="Variable315
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape27 -> var_4943911960 [label="y"];
+op_ScalarMul27 [label="ScalarMul27
+ScalarMul
+value=6.103515625e-05", shape=box];
+var_4943911960 -> op_ScalarMul27 [label="x0"];
+var_4943911064 [
+label="Variable316
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul27 -> var_4943911064 [label="y"];
+op_ScalarAdd13 [label="ScalarAdd13
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4943911064 -> op_ScalarAdd13 [label="x0"];
+var_4943910168 [
+label="Variable317
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd13 -> var_4943910168 [label="y"];
+op_Rsqrt13 [label="Rsqrt13
+Rsqrt
+", shape=box];
+var_4943910168 -> op_Rsqrt13 [label="x0"];
+var_4943854392 [
+label="Variable318
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt13 -> var_4943854392 [label="y"];
+op_ElementwiseMul40 [label="ElementwiseMul40
+ElementwiseMul
+", shape=box];
+var_4943854392 -> op_ElementwiseMul40 [label="x0"];
+var_4943909160 [
+label="ConstantVariable18
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4943909160 -> op_ElementwiseMul40 [label="x1"];
+var_4943853272 [
+label="Variable319
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul40 -> var_4943853272 [label="y"];
+op_ElementwiseMul41 [label="ElementwiseMul41
+ElementwiseMul
+", shape=box];
+var_4943966104 -> op_ElementwiseMul41 [label="x0"];
+var_4943853272 -> op_ElementwiseMul41 [label="x1"];
+var_4944013968 [
+label="Variable320
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul41 -> var_4944013968 [label="y"];
+op_ScalarAffine27 [label="ScalarAffine27
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4944013968 -> op_ScalarAffine27 [label="x0"];
+var_4944014080 [
+label="Variable321
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine27 -> var_4944014080 [label="y"];
+op_ElementwiseAdd59 [label="ElementwiseAdd59
+ElementwiseAdd
+", shape=box];
+var_4944014192 [
+label="ConstantVariable138
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4944014192 -> op_ElementwiseAdd59 [label="x0"];
+var_4944014080 -> op_ElementwiseAdd59 [label="x1"];
+var_4944014808 [
+label="Variable322
+(1, 1, 1, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd59 -> var_4944014808 [label="y"];
+op_ElementwiseMul42 [label="ElementwiseMul42
+ElementwiseMul
+", shape=box];
+var_4943853552 -> op_ElementwiseMul42 [label="x0"];
+var_4943853272 -> op_ElementwiseMul42 [label="x1"];
+var_4944073784 [
+label="Variable323
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul42 -> var_4944073784 [label="y"];
+op_ElementwiseAdd60 [label="ElementwiseAdd60
+ElementwiseAdd
+", shape=box];
+var_4944073784 -> op_ElementwiseAdd60 [label="x0"];
+var_4944014808 -> op_ElementwiseAdd60 [label="x1"];
+var_4944074064 [
+label="Variable324
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd60 -> var_4944074064 [label="y"];
+op_Relu8 [label="Relu8
+Relu
+", shape=box];
+var_4944074064 -> op_Relu8 [label="x0"];
+var_4944075184 [
+label="Variable325
+(1, 128, 128, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu8 -> var_4944075184 [label="y"];
+op_Resize2D1 [label="Resize2D1
+Resize2D
+axis1=<Axis H>
+axis2=<Axis W>
+size1=256
+size2=256", shape=box];
+var_4944075184 -> op_Resize2D1 [label="x"];
+var_4944075968 [
+label="Variable328
+(1, 256, 256, 32)
+Order=[N, H, W, C]",shape=octagon];
+op_Resize2D1 -> var_4944075968 [label="y"];
+op_Im2Col14 [label="Im2Col14
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4944075968 -> op_Im2Col14 [label="im"];
+var_4939231864 [
+label="Variable404
+(1, 256, 256, 288)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col14 -> var_4939231864 [label="col"];
+op_Sgemm14 [label="Sgemm14
+Sgemm
+M=65536
+N=16
+K=288
+out_shape=[1, 256, 256, 16]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939231864 -> op_Sgemm14 [label="A"];
+var_4944130568 [
+label="ConstantVariable12
+(3, 3, 32, 16)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4944130568 -> op_Sgemm14 [label="B"];
+var_4944130344 [
+label="Variable330
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm14 -> var_4944130344 [label="C"];
+op_ElementwiseAdd61 [label="ElementwiseAdd61
+ElementwiseAdd
+", shape=box];
+var_4944130344 -> op_ElementwiseAdd61 [label="x0"];
+var_4944130512 [
+label="ConstantVariable11
+(16,)
+Order=[C]",shape=doubleoctagon];
+var_4944130512 -> op_ElementwiseAdd61 [label="x1"];
+var_4944131632 [
+label="Variable331
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd61 -> var_4944131632 [label="y"];
+op_Sum56 [label="Sum56
+Sum
+axis=<AxisVar W>", shape=box];
+var_4944131632 -> op_Sum56 [label="x"];
+var_4944287728 [
+label="Variable332
+(1, 256, 16)
+Order=[N, H, C]",shape=octagon];
+op_Sum56 -> var_4944287728 [label="y"];
+op_Sum57 [label="Sum57
+Sum
+axis=<AxisVar H>", shape=box];
+var_4944287728 -> op_Sum57 [label="x"];
+var_4944287056 [
+label="Variable333
+(1, 16)
+Order=[N, C]",shape=octagon];
+op_Sum57 -> var_4944287056 [label="y"];
+op_Reshape28 [label="Reshape28
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 16]", shape=box];
+var_4944287056 -> op_Reshape28 [label="x"];
+var_4944286104 [
+label="Variable334
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape28 -> var_4944286104 [label="y"];
+op_ScalarMul28 [label="ScalarMul28
+ScalarMul
+value=1.52587890625e-05", shape=box];
+var_4944286104 -> op_ScalarMul28 [label="x0"];
+var_4944227800 [
+label="Variable335
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul28 -> var_4944227800 [label="y"];
+op_ScalarAffine28 [label="ScalarAffine28
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4944227800 -> op_ScalarAffine28 [label="x0"];
+var_4944225448 [
+label="Variable336
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine28 -> var_4944225448 [label="y"];
+op_ElementwiseAdd62 [label="ElementwiseAdd62
+ElementwiseAdd
+", shape=box];
+var_4944131632 -> op_ElementwiseAdd62 [label="x0"];
+var_4944225448 -> op_ElementwiseAdd62 [label="x1"];
+var_4944225896 [
+label="Variable337
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd62 -> var_4944225896 [label="y"];
+op_ScalarPow14 [label="ScalarPow14
+ScalarPow
+value=2.0", shape=box];
+var_4944225896 -> op_ScalarPow14 [label="x0"];
+var_4944225056 [
+label="Variable338
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow14 -> var_4944225056 [label="y"];
+op_Sum58 [label="Sum58
+Sum
+axis=<AxisVar W>", shape=box];
+var_4944225056 -> op_Sum58 [label="x"];
+var_4944224496 [
+label="Variable339
+(1, 256, 16)
+Order=[N, H, C]",shape=octagon];
+op_Sum58 -> var_4944224496 [label="y"];
+op_Sum59 [label="Sum59
+Sum
+axis=<AxisVar H>", shape=box];
+var_4944224496 -> op_Sum59 [label="x"];
+var_4944178704 [
+label="Variable340
+(1, 16)
+Order=[N, C]",shape=octagon];
+op_Sum59 -> var_4944178704 [label="y"];
+op_Reshape29 [label="Reshape29
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 16]", shape=box];
+var_4944178704 -> op_Reshape29 [label="x"];
+var_4944177752 [
+label="Variable341
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape29 -> var_4944177752 [label="y"];
+op_ScalarMul29 [label="ScalarMul29
+ScalarMul
+value=1.52587890625e-05", shape=box];
+var_4944177752 -> op_ScalarMul29 [label="x0"];
+var_4944176856 [
+label="Variable342
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul29 -> var_4944176856 [label="y"];
+op_ScalarAdd14 [label="ScalarAdd14
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4944176856 -> op_ScalarAdd14 [label="x0"];
+var_4944175960 [
+label="Variable343
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd14 -> var_4944175960 [label="y"];
+op_Rsqrt14 [label="Rsqrt14
+Rsqrt
+", shape=box];
+var_4944175960 -> op_Rsqrt14 [label="x0"];
+var_4944132472 [
+label="Variable344
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt14 -> var_4944132472 [label="y"];
+op_ElementwiseMul44 [label="ElementwiseMul44
+ElementwiseMul
+", shape=box];
+var_4944132472 -> op_ElementwiseMul44 [label="x0"];
+var_4944133816 [
+label="ConstantVariable7
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4944133816 -> op_ElementwiseMul44 [label="x1"];
+var_4944131352 [
+label="Variable345
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul44 -> var_4944131352 [label="y"];
+op_ElementwiseMul45 [label="ElementwiseMul45
+ElementwiseMul
+", shape=box];
+var_4944227800 -> op_ElementwiseMul45 [label="x0"];
+var_4944131352 -> op_ElementwiseMul45 [label="x1"];
+var_4944287952 [
+label="Variable346
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul45 -> var_4944287952 [label="y"];
+op_ScalarAffine29 [label="ScalarAffine29
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4944287952 -> op_ScalarAffine29 [label="x0"];
+var_4944288064 [
+label="Variable347
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine29 -> var_4944288064 [label="y"];
+op_ElementwiseAdd63 [label="ElementwiseAdd63
+ElementwiseAdd
+", shape=box];
+var_4944288176 [
+label="ConstantVariable144
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4944288176 -> op_ElementwiseAdd63 [label="x0"];
+var_4944288064 -> op_ElementwiseAdd63 [label="x1"];
+var_4944289744 [
+label="Variable348
+(1, 1, 1, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd63 -> var_4944289744 [label="y"];
+op_ElementwiseMul46 [label="ElementwiseMul46
+ElementwiseMul
+", shape=box];
+var_4944131632 -> op_ElementwiseMul46 [label="x0"];
+var_4944131352 -> op_ElementwiseMul46 [label="x1"];
+var_4944351864 [
+label="Variable349
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul46 -> var_4944351864 [label="y"];
+op_ElementwiseAdd64 [label="ElementwiseAdd64
+ElementwiseAdd
+", shape=box];
+var_4944351864 -> op_ElementwiseAdd64 [label="x0"];
+var_4944289744 -> op_ElementwiseAdd64 [label="x1"];
+var_4944352144 [
+label="Variable350
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd64 -> var_4944352144 [label="y"];
+op_Relu9 [label="Relu9
+Relu
+", shape=box];
+var_4944352144 -> op_Relu9 [label="x0"];
+var_4944353264 [
+label="Variable351
+(1, 256, 256, 16)
+Order=[N, H, W, C]",shape=octagon];
+op_Relu9 -> var_4944353264 [label="y"];
+op_Im2Col15 [label="Im2Col15
+Im2Col
+ksize=(9, 9)
+stride=(1, 1)
+padding=(4, 4)
+dilation_rate=(1, 1)", shape=box];
+var_4944353264 -> op_Im2Col15 [label="im"];
+var_4939232200 [
+label="Variable406
+(1, 256, 256, 1296)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col15 -> var_4939232200 [label="col"];
+op_Sgemm15 [label="Sgemm15
+Sgemm
+M=65536
+N=3
+K=1296
+out_shape=[1, 256, 256, 3]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4939232200 -> op_Sgemm15 [label="A"];
+var_4944354776 [
+label="ConstantVariable5
+(9, 9, 16, 3)
+Order=[H, W, C, N]",shape=doubleoctagon];
+var_4944354776 -> op_Sgemm15 [label="B"];
+var_4944354608 [
+label="Variable353
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm15 -> var_4944354608 [label="C"];
+op_ElementwiseAdd65 [label="ElementwiseAdd65
+ElementwiseAdd
+", shape=box];
+var_4944354608 -> op_ElementwiseAdd65 [label="x0"];
+var_4944986408 [
+label="ConstantVariable4
+(3,)
+Order=[C]",shape=doubleoctagon];
+var_4944986408 -> op_ElementwiseAdd65 [label="x1"];
+var_4944986688 [
+label="Variable354
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd65 -> var_4944986688 [label="y"];
+op_Sum60 [label="Sum60
+Sum
+axis=<AxisVar W>", shape=box];
+var_4944986688 -> op_Sum60 [label="x"];
+var_4945159168 [
+label="Variable355
+(1, 256, 3)
+Order=[N, H, C]",shape=octagon];
+op_Sum60 -> var_4945159168 [label="y"];
+op_Sum61 [label="Sum61
+Sum
+axis=<AxisVar H>", shape=box];
+var_4945159168 -> op_Sum61 [label="x"];
+var_4945158496 [
+label="Variable356
+(1, 3)
+Order=[N, C]",shape=octagon];
+op_Sum61 -> var_4945158496 [label="y"];
+op_Reshape30 [label="Reshape30
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 3]", shape=box];
+var_4945158496 -> op_Reshape30 [label="x"];
+var_4945096040 [
+label="Variable357
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape30 -> var_4945096040 [label="y"];
+op_ScalarMul30 [label="ScalarMul30
+ScalarMul
+value=1.52587890625e-05", shape=box];
+var_4945096040 -> op_ScalarMul30 [label="x0"];
+var_4945095144 [
+label="Variable358
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul30 -> var_4945095144 [label="y"];
+op_ScalarAffine30 [label="ScalarAffine30
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4945095144 -> op_ScalarAffine30 [label="x0"];
+var_4945092792 [
+label="Variable359
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine30 -> var_4945092792 [label="y"];
+op_ElementwiseAdd66 [label="ElementwiseAdd66
+ElementwiseAdd
+", shape=box];
+var_4944986688 -> op_ElementwiseAdd66 [label="x0"];
+var_4945092792 -> op_ElementwiseAdd66 [label="x1"];
+var_4945093240 [
+label="Variable360
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd66 -> var_4945093240 [label="y"];
+op_ScalarPow15 [label="ScalarPow15
+ScalarPow
+value=2.0", shape=box];
+var_4945093240 -> op_ScalarPow15 [label="x0"];
+var_4945051376 [
+label="Variable361
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarPow15 -> var_4945051376 [label="y"];
+op_Sum62 [label="Sum62
+Sum
+axis=<AxisVar W>", shape=box];
+var_4945051376 -> op_Sum62 [label="x"];
+var_4945050816 [
+label="Variable362
+(1, 256, 3)
+Order=[N, H, C]",shape=octagon];
+op_Sum62 -> var_4945050816 [label="y"];
+op_Sum63 [label="Sum63
+Sum
+axis=<AxisVar H>", shape=box];
+var_4945050816 -> op_Sum63 [label="x"];
+var_4945050144 [
+label="Variable363
+(1, 3)
+Order=[N, C]",shape=octagon];
+op_Sum63 -> var_4945050144 [label="y"];
+op_Reshape31 [label="Reshape31
+Reshape
+in_order=[N, C]
+out_order=[N, H, W, C]
+out_shape=[1, 1, 1, 3]", shape=box];
+var_4945050144 -> op_Reshape31 [label="x"];
+var_4945049192 [
+label="Variable364
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_Reshape31 -> var_4945049192 [label="y"];
+op_ScalarMul31 [label="ScalarMul31
+ScalarMul
+value=1.52587890625e-05", shape=box];
+var_4945049192 -> op_ScalarMul31 [label="x0"];
+var_4945048296 [
+label="Variable365
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarMul31 -> var_4945048296 [label="y"];
+op_ScalarAdd15 [label="ScalarAdd15
+ScalarAdd
+value=9.999999747378752e-06", shape=box];
+var_4945048296 -> op_ScalarAdd15 [label="x0"];
+var_4944989992 [
+label="Variable366
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAdd15 -> var_4944989992 [label="y"];
+op_Rsqrt15 [label="Rsqrt15
+Rsqrt
+", shape=box];
+var_4944989992 -> op_Rsqrt15 [label="x0"];
+var_4944987528 [
+label="Variable367
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_Rsqrt15 -> var_4944987528 [label="y"];
+op_ElementwiseMul47 [label="ElementwiseMul47
+ElementwiseMul
+", shape=box];
+var_4944987528 -> op_ElementwiseMul47 [label="x0"];
+var_4944989880 [
+label="ConstantVariable0
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4944989880 -> op_ElementwiseMul47 [label="x1"];
+var_4944986352 [
+label="Variable368
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul47 -> var_4944986352 [label="y"];
+op_ElementwiseMul48 [label="ElementwiseMul48
+ElementwiseMul
+", shape=box];
+var_4945095144 -> op_ElementwiseMul48 [label="x0"];
+var_4944986352 -> op_ElementwiseMul48 [label="x1"];
+var_4945158216 [
+label="Variable369
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul48 -> var_4945158216 [label="y"];
+op_ScalarAffine31 [label="ScalarAffine31
+ScalarAffine
+scale=-1.0
+bias=0.0", shape=box];
+var_4945158216 -> op_ScalarAffine31 [label="x0"];
+var_4945159504 [
+label="Variable370
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ScalarAffine31 -> var_4945159504 [label="y"];
+op_ElementwiseAdd67 [label="ElementwiseAdd67
+ElementwiseAdd
+", shape=box];
+var_4945158328 [
+label="ConstantVariable145
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=doubleoctagon];
+var_4945158328 -> op_ElementwiseAdd67 [label="x0"];
+var_4945159504 -> op_ElementwiseAdd67 [label="x1"];
+var_4945161184 [
+label="Variable371
+(1, 1, 1, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd67 -> var_4945161184 [label="y"];
+op_ElementwiseMul49 [label="ElementwiseMul49
+ElementwiseMul
+", shape=box];
+var_4944986688 -> op_ElementwiseMul49 [label="x0"];
+var_4944986352 -> op_ElementwiseMul49 [label="x1"];
+var_4945160400 [
+label="Variable372
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseMul49 -> var_4945160400 [label="y"];
+op_ElementwiseAdd68 [label="ElementwiseAdd68
+ElementwiseAdd
+", shape=box];
+var_4945160400 -> op_ElementwiseAdd68 [label="x0"];
+var_4945161184 -> op_ElementwiseAdd68 [label="x1"];
+var_4945162080 [
+label="Variable373
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_ElementwiseAdd68 -> var_4945162080 [label="y"];
+op_Tanh0 [label="Tanh0
+Tanh
+", shape=box];
+var_4945162080 -> op_Tanh0 [label="x0"];
+var_4945208320 [
+label="Variable374
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon];
+op_Tanh0 -> var_4945208320 [label="y"];
+op_ScalarMul32 [label="ScalarMul32
+ScalarMul
+value=150.0", shape=box];
+var_4945208320 -> op_ScalarMul32 [label="x0"];
+var_4945209216 [
+label="Variable375
+(1, 256, 256, 3)
+Order=[N, H, W, C]",shape=octagon,style="bold"];
+op_ScalarMul32 -> var_4945209216 [label="y"];
+}

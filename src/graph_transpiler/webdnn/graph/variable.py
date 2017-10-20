@@ -153,7 +153,7 @@ class Variable(Node):
 
     # Binary operators
     def __add__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_add.ScalarAdd(None, other)(self)[0]
 
         elif isinstance(other, Variable):
@@ -163,7 +163,7 @@ class Variable(Node):
             raise TypeError(f"unsupported operand type(s) for +: '{type(self).__name__}' and '{type(other).__name__}'")
 
     def __radd__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_add.ScalarAdd(None, other)(self)[0]
 
         elif isinstance(other, Variable):
@@ -173,7 +173,7 @@ class Variable(Node):
             raise TypeError(f"unsupported operand type(s) for +: '{type(other).__name__}' and '{type(self).__name__}'")
 
     def __sub__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_add.ScalarAdd(None, -other)(self)[0]
 
         elif isinstance(other, Variable):
@@ -183,7 +183,7 @@ class Variable(Node):
             raise TypeError(f"unsupported operand type(s) for -: '{type(self).__name__}' and '{type(other).__name__}'")
 
     def __rsub__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_add.ScalarAdd(None, other)(-self)[0]
 
         elif isinstance(other, Variable):
@@ -193,7 +193,7 @@ class Variable(Node):
             raise TypeError(f"unsupported operand type(s) for -: '{type(other).__name__}' and '{type(self).__name__}'")
 
     def __mul__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_mul.ScalarMul(None, other)(self)[0]
 
         elif isinstance(other, Variable):
@@ -203,7 +203,7 @@ class Variable(Node):
             raise TypeError(f"unsupported operand type(s) for *: '{type(self).__name__}' and '{type(other).__name__}'")
 
     def __rmul__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_mul.ScalarMul(None, other)(self)[0]
 
         elif isinstance(other, Variable):
@@ -223,7 +223,7 @@ class Variable(Node):
             raise TypeError(f"unsupported operand type(s) for /: '{type(self).__name__}' and '{type(other).__name__}'")
 
     def __rtruediv__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_mul.ScalarMul(None, other)(self ** -1)[0]
 
         elif isinstance(other, Variable):
@@ -236,7 +236,7 @@ class Variable(Node):
         if modulo is not None:
             raise NotImplementedError("Variable.__pow__ is not supported modulo argument")
 
-        elif isinstance(power, (int, float)):
+        elif isinstance(power, (int, float, Placeholder)):
             return webdnn.graph.operators.scalar_pow.ScalarPow(None, power)(self)[0]
 
         elif isinstance(power, Variable):
@@ -246,7 +246,7 @@ class Variable(Node):
             raise TypeError(f"unsupported operand type(s) for ** or pow: '{type(self).__name__}' and '{type(power).__name__}'")
 
     def __rpow__(self, other) -> "Variable":
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float, Placeholder)):
             # FIXME
             raise TypeError(f"unsupported operand type(s) for ** or pow: '{type(other).__name__}' and '{type(self).__name__}'")
 

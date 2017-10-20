@@ -1,6 +1,13 @@
+from typing import List
+
 import tensorflow as tf
 
+from webdnn import ConstantVariable
+from webdnn.frontend.constraints import unify_order
 from webdnn.frontend.tensorflow.converter import TensorFlowConverter
+from webdnn.graph.axis import Axis
+from webdnn.graph.operators.resize_2d import Resize2D
+from webdnn.graph.order import OrderNHWC
 
 
 @TensorFlowConverter.register_handler("AdjustContrast")
@@ -130,7 +137,16 @@ def resize_bilinear_grad_handler(converter: TensorFlowConverter, tf_op: "tf.Oper
 
 @TensorFlowConverter.register_handler("ResizeNearestNeighbor")
 def resize_nearest_neighbor_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    size = converter.get_variable(tf_op.inputs[1])
+
+    assert isinstance(size, ConstantVariable), NotImplementedError(
+        "[TensorFlowConverter] Resize operation with dynamic size is not supported yet.")
+    size = size.data.flatten().astype(int).tolist()  # type: List[int]
+
+    unify_order(x.order, OrderNHWC)
+    y, = Resize2D(None, axis1=Axis.H, size1=size[0], axis2=Axis.W, size2=size[1])(x)
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("ResizeNearestNeighborGrad")

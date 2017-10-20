@@ -33,6 +33,7 @@ from webdnn.graph.operators import reduce
 from webdnn.graph.operators import reinterpret_axis
 from webdnn.graph.operators import relu
 from webdnn.graph.operators import reshape
+from webdnn.graph.operators import resize_2d
 from webdnn.graph.operators import scalar_add
 from webdnn.graph.operators import scalar_affine
 from webdnn.graph.operators import scalar_mul

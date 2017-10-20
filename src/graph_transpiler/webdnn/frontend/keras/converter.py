@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 
+import traceback
 from collections import defaultdict
 from typing import List
 
 from webdnn.frontend.converter import Converter
 from webdnn.frontend.tensorflow import TensorFlowConverter
-from webdnn.frontend.tensorflow.converter import CyclicGraphError
 from webdnn.graph.axis import Axis, AxisKeyDict
 from webdnn.graph.graph import Graph
 from webdnn.graph.order import OrderNC, Order, OrderNHWC, OrderNTC
@@ -110,11 +110,13 @@ class KerasConverter(Converter["keras.layers.Layer"]):
             return self._convert_fallback(model)
 
         else:
+            # noinspection PyBroadException
             try:
                 return TensorFlowConverter(session=K.get_session(), batch_size=self._batch_size).convert(model.inputs, model.outputs)
 
-            except CyclicGraphError:
+            except Exception:
                 self._flag_keras_mode = True
+                console.debug(traceback.format_exc())
                 console.debug("[KerasConverter] TensorflowConverter failed to convert.")
 
         return self._convert_fallback(model)

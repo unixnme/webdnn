@@ -648,3 +648,6 @@ class Placeholder(json.SerializableMixin):
 
             else:
                 return f"placeholders['{self.label}']" + (";" if flag_semicolon else "")
+
+
+IntOrPlaceholder = Union[int, Placeholder]

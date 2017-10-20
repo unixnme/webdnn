@@ -1,0 +1,2086 @@
+digraph webdnn_ir {
+graph [
+];
+op_Im2Col0 [label="Im2Col0
+Im2Col
+ksize=(7, 7)
+stride=(2, 2)
+padding=(3, 3)
+dilation_rate=(1, 1)", shape=box];
+var_4524797512 [
+label="Variable1
+(1, 224, 224, 3)
+Order=[N, H, W, C]",shape=octagon,style="dashed"];
+var_4524797512 -> op_Im2Col0 [label="im"];
+var_4782566536 [
+label="Variable313
+(1, 112, 112, 147)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col0 -> var_4782566536 [label="col"];
+op_Sgemm0 [label="Sgemm0
+Sgemm
+M=12544
+N=64
+K=147
+out_shape=[1, 112, 112, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782566536 -> op_Sgemm0 [label="A"];
+var_4788065784 [
+label="ConstantVariable386
+(147, 64)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4788065784 -> op_Sgemm0 [label="B"];
+var_4524832192 [
+label="Variable2
+(1, 112, 112, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm0 -> var_4524832192 [label="C"];
+op_FusedElementwise48 [label="FusedElementwise48
+FusedElementwise
+", shape=box];
+var_4524832192 -> op_FusedElementwise48 [label="x0"];
+var_4782793448 [
+label="ConstantVariable219
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4782793448 -> op_FusedElementwise48 [label="x1"];
+var_4782564296 [
+label="Variable6
+(1, 112, 112, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise48 -> var_4782564296 [label="y"];
+op_MaxPooling2D0 [label="MaxPooling2D0
+MaxPooling2D
+ksize=(3, 3)
+stride=(2, 2)
+padding=(0, 0)", shape=box];
+var_4782564296 -> op_MaxPooling2D0 [label="x"];
+var_4782565192 [
+label="Variable7
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_MaxPooling2D0 -> var_4782565192 [label="y"];
+op_Sgemm4 [label="Sgemm4
+Sgemm
+M=3136
+N=256
+K=64
+out_shape=[1, 56, 56, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782565192 -> op_Sgemm4 [label="A"];
+var_4911238952 [
+label="ConstantVariable398
+(64, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911238952 -> op_Sgemm4 [label="B"];
+var_4782605256 [
+label="Variable19
+(1, 56, 56, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm4 -> var_4782605256 [label="C"];
+op_Sgemm1 [label="Sgemm1
+Sgemm
+M=3136
+N=64
+K=64
+out_shape=[1, 56, 56, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782565192 -> op_Sgemm1 [label="A"];
+var_4784367992 [
+label="ConstantVariable389
+(64, 64)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4784367992 -> op_Sgemm1 [label="B"];
+var_4782759160 [
+label="Variable9
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm1 -> var_4782759160 [label="C"];
+op_FusedElementwise47 [label="FusedElementwise47
+FusedElementwise
+", shape=box];
+var_4782795240 [
+label="ConstantVariable7
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4782795240 -> op_FusedElementwise47 [label="x0"];
+var_4782759160 -> op_FusedElementwise47 [label="x1"];
+var_4782721680 [
+label="Variable12
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise47 -> var_4782721680 [label="y"];
+op_Im2Col1 [label="Im2Col1
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4782721680 -> op_Im2Col1 [label="im"];
+var_4524834264 [
+label="Variable316
+(1, 56, 56, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col1 -> var_4524834264 [label="col"];
+op_Sgemm2 [label="Sgemm2
+Sgemm
+M=3136
+N=64
+K=576
+out_shape=[1, 56, 56, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4524834264 -> op_Sgemm2 [label="A"];
+var_4784337080 [
+label="ConstantVariable392
+(576, 64)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4784337080 -> op_Sgemm2 [label="B"];
+var_4782719160 [
+label="Variable14
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm2 -> var_4782719160 [label="C"];
+op_FusedElementwise46 [label="FusedElementwise46
+FusedElementwise
+", shape=box];
+var_4782719160 -> op_FusedElementwise46 [label="x0"];
+var_4782838112 [
+label="ConstantVariable11
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4782838112 -> op_FusedElementwise46 [label="x1"];
+var_4782694472 [
+label="Variable17
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise46 -> var_4782694472 [label="y"];
+op_Sgemm3 [label="Sgemm3
+Sgemm
+M=3136
+N=256
+K=64
+out_shape=[1, 56, 56, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782694472 -> op_Sgemm3 [label="A"];
+var_4911235704 [
+label="ConstantVariable395
+(64, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911235704 -> op_Sgemm3 [label="B"];
+var_4782655416 [
+label="Variable21
+(1, 56, 56, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm3 -> var_4782655416 [label="C"];
+op_FusedElementwise45 [label="FusedElementwise45
+FusedElementwise
+", shape=box];
+var_4782913184 [
+label="ConstantVariable231
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4782913184 -> op_FusedElementwise45 [label="x0"];
+var_4782655416 -> op_FusedElementwise45 [label="x1"];
+var_4782605256 -> op_FusedElementwise45 [label="x2"];
+var_4782870600 [
+label="Variable27
+(1, 56, 56, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise45 -> var_4782870600 [label="y"];
+op_Sgemm5 [label="Sgemm5
+Sgemm
+M=3136
+N=64
+K=256
+out_shape=[1, 56, 56, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782870600 -> op_Sgemm5 [label="A"];
+var_4788093056 [
+label="ConstantVariable383
+(256, 64)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4788093056 -> op_Sgemm5 [label="B"];
+var_4782873736 [
+label="Variable29
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm5 -> var_4782873736 [label="C"];
+op_FusedElementwise44 [label="FusedElementwise44
+FusedElementwise
+", shape=box];
+var_4782873736 -> op_FusedElementwise44 [label="x0"];
+var_4782893768 [
+label="ConstantVariable23
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4782893768 -> op_FusedElementwise44 [label="x1"];
+var_4782912120 [
+label="Variable32
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise44 -> var_4782912120 [label="y"];
+op_Im2Col2 [label="Im2Col2
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4782912120 -> op_Im2Col2 [label="im"];
+var_4782874184 [
+label="Variable321
+(1, 56, 56, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col2 -> var_4782874184 [label="col"];
+op_Sgemm6 [label="Sgemm6
+Sgemm
+M=3136
+N=64
+K=576
+out_shape=[1, 56, 56, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782874184 -> op_Sgemm6 [label="A"];
+var_4788119424 [
+label="ConstantVariable380
+(576, 64)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4788119424 -> op_Sgemm6 [label="B"];
+var_4782915256 [
+label="Variable34
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm6 -> var_4782915256 [label="C"];
+op_FusedElementwise43 [label="FusedElementwise43
+FusedElementwise
+", shape=box];
+var_4782915256 -> op_FusedElementwise43 [label="x0"];
+var_4782939384 [
+label="ConstantVariable27
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4782939384 -> op_FusedElementwise43 [label="x1"];
+var_4782789800 [
+label="Variable37
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise43 -> var_4782789800 [label="y"];
+op_Sgemm7 [label="Sgemm7
+Sgemm
+M=3136
+N=256
+K=64
+out_shape=[1, 56, 56, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782789800 -> op_Sgemm7 [label="A"];
+var_4788196016 [
+label="ConstantVariable377
+(64, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4788196016 -> op_Sgemm7 [label="B"];
+var_4782993704 [
+label="Variable39
+(1, 56, 56, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm7 -> var_4782993704 [label="C"];
+op_FusedElementwise42 [label="FusedElementwise42
+FusedElementwise
+", shape=box];
+var_4782993704 -> op_FusedElementwise42 [label="x0"];
+var_4782870600 -> op_FusedElementwise42 [label="x1"];
+var_4782997288 [
+label="ConstantVariable31
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4782997288 -> op_FusedElementwise42 [label="x2"];
+var_4783021304 [
+label="Variable43
+(1, 56, 56, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise42 -> var_4783021304 [label="y"];
+op_Sgemm8 [label="Sgemm8
+Sgemm
+M=3136
+N=64
+K=256
+out_shape=[1, 56, 56, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783021304 -> op_Sgemm8 [label="A"];
+var_4805106544 [
+label="ConstantVariable374
+(256, 64)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4805106544 -> op_Sgemm8 [label="B"];
+var_4783184248 [
+label="Variable45
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm8 -> var_4783184248 [label="C"];
+op_FusedElementwise41 [label="FusedElementwise41
+FusedElementwise
+", shape=box];
+var_4783182288 [
+label="ConstantVariable35
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4783182288 -> op_FusedElementwise41 [label="x0"];
+var_4783184248 -> op_FusedElementwise41 [label="x1"];
+var_4783146768 [
+label="Variable48
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise41 -> var_4783146768 [label="y"];
+op_Im2Col3 [label="Im2Col3
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4783146768 -> op_Im2Col3 [label="im"];
+var_4782634040 [
+label="Variable325
+(1, 56, 56, 576)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col3 -> var_4782634040 [label="col"];
+op_Sgemm9 [label="Sgemm9
+Sgemm
+M=3136
+N=64
+K=576
+out_shape=[1, 56, 56, 64]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782634040 -> op_Sgemm9 [label="A"];
+var_4805145880 [
+label="ConstantVariable371
+(576, 64)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4805145880 -> op_Sgemm9 [label="B"];
+var_4783123312 [
+label="Variable50
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm9 -> var_4783123312 [label="C"];
+op_FusedElementwise40 [label="FusedElementwise40
+FusedElementwise
+", shape=box];
+var_4783229976 [
+label="ConstantVariable39
+(64,)
+Order=[C]",shape=doubleoctagon];
+var_4783229976 -> op_FusedElementwise40 [label="x0"];
+var_4783123312 -> op_FusedElementwise40 [label="x1"];
+var_4783090432 [
+label="Variable53
+(1, 56, 56, 64)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise40 -> var_4783090432 [label="y"];
+op_Sgemm10 [label="Sgemm10
+Sgemm
+M=3136
+N=256
+K=64
+out_shape=[1, 56, 56, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783090432 -> op_Sgemm10 [label="A"];
+var_4891162720 [
+label="ConstantVariable401
+(64, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4891162720 -> op_Sgemm10 [label="B"];
+var_4783088304 [
+label="Variable55
+(1, 56, 56, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm10 -> var_4783088304 [label="C"];
+op_FusedElementwise39 [label="FusedElementwise39
+FusedElementwise
+", shape=box];
+var_4783088304 -> op_FusedElementwise39 [label="x0"];
+var_4783044816 [
+label="ConstantVariable43
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4783044816 -> op_FusedElementwise39 [label="x1"];
+var_4783021304 -> op_FusedElementwise39 [label="x2"];
+var_4783274248 [
+label="Variable59
+(1, 56, 56, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise39 -> var_4783274248 [label="y"];
+op_Im2Col4 [label="Im2Col4
+Im2Col
+ksize=(1, 1)
+stride=(2, 2)
+padding=(0, 0)
+dilation_rate=(1, 1)", shape=box];
+var_4783274248 -> op_Im2Col4 [label="im"];
+var_4782607776 [
+label="Variable328
+(1, 28, 28, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col4 -> var_4782607776 [label="col"];
+op_Sgemm14 [label="Sgemm14
+Sgemm
+M=784
+N=512
+K=256
+out_shape=[1, 28, 28, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4805215400 [
+label="ConstantVariable368
+(256, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4805215400 -> op_Sgemm14 [label="B"];
+var_4782607776 -> op_Sgemm14 [label="A"];
+var_4783314312 [
+label="Variable71
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm14 -> var_4783314312 [label="C"];
+op_Sgemm11 [label="Sgemm11
+Sgemm
+M=784
+N=128
+K=256
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782607776 -> op_Sgemm11 [label="A"];
+var_4784366536 [
+label="ConstantVariable404
+(256, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4784366536 -> op_Sgemm11 [label="B"];
+var_4783728120 [
+label="Variable61
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm11 -> var_4783728120 [label="C"];
+op_FusedElementwise38 [label="FusedElementwise38
+FusedElementwise
+", shape=box];
+var_4783701520 [
+label="ConstantVariable47
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4783701520 -> op_FusedElementwise38 [label="x0"];
+var_4783728120 -> op_FusedElementwise38 [label="x1"];
+var_4783698832 [
+label="Variable64
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise38 -> var_4783698832 [label="y"];
+op_Im2Col5 [label="Im2Col5
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4783698832 -> op_Im2Col5 [label="im"];
+var_4782912960 [
+label="Variable330
+(1, 28, 28, 1152)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col5 -> var_4782912960 [label="col"];
+op_Sgemm12 [label="Sgemm12
+Sgemm
+M=784
+N=128
+K=1152
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782912960 -> op_Sgemm12 [label="A"];
+var_4891191672 [
+label="ConstantVariable407
+(1152, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4891191672 -> op_Sgemm12 [label="B"];
+var_4783667576 [
+label="Variable66
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm12 -> var_4783667576 [label="C"];
+op_FusedElementwise37 [label="FusedElementwise37
+FusedElementwise
+", shape=box];
+var_4783644568 [
+label="ConstantVariable51
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4783644568 -> op_FusedElementwise37 [label="x0"];
+var_4783667576 -> op_FusedElementwise37 [label="x1"];
+var_4783641880 [
+label="Variable69
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise37 -> var_4783641880 [label="y"];
+op_Sgemm13 [label="Sgemm13
+Sgemm
+M=784
+N=512
+K=128
+out_shape=[1, 28, 28, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783641880 -> op_Sgemm13 [label="A"];
+var_4787993512 [
+label="ConstantVariable410
+(128, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4787993512 -> op_Sgemm13 [label="B"];
+var_4783622520 [
+label="Variable73
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm13 -> var_4783622520 [label="C"];
+op_FusedElementwise36 [label="FusedElementwise36
+FusedElementwise
+", shape=box];
+var_4783314312 -> op_FusedElementwise36 [label="x0"];
+var_4782894552 [
+label="ConstantVariable228
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4782894552 -> op_FusedElementwise36 [label="x1"];
+var_4783622520 -> op_FusedElementwise36 [label="x2"];
+var_4783809032 [
+label="Variable79
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise36 -> var_4783809032 [label="y"];
+op_Sgemm15 [label="Sgemm15
+Sgemm
+M=784
+N=128
+K=512
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783809032 -> op_Sgemm15 [label="A"];
+var_4788120712 [
+label="ConstantVariable413
+(512, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4788120712 -> op_Sgemm15 [label="B"];
+var_4784205952 [
+label="Variable81
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm15 -> var_4784205952 [label="C"];
+op_FusedElementwise35 [label="FusedElementwise35
+FusedElementwise
+", shape=box];
+var_4784205952 -> op_FusedElementwise35 [label="x0"];
+var_4784178848 [
+label="ConstantVariable63
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4784178848 -> op_FusedElementwise35 [label="x1"];
+var_4784155616 [
+label="Variable84
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise35 -> var_4784155616 [label="y"];
+op_Im2Col7 [label="Im2Col7
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4784155616 -> op_Im2Col7 [label="im"];
+var_4782939888 [
+label="Variable336
+(1, 28, 28, 1152)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col7 -> var_4782939888 [label="col"];
+op_Sgemm16 [label="Sgemm16
+Sgemm
+M=784
+N=128
+K=1152
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782939888 -> op_Sgemm16 [label="A"];
+var_4805262696 [
+label="ConstantVariable365
+(1152, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4805262696 -> op_Sgemm16 [label="B"];
+var_4784153096 [
+label="Variable86
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm16 -> var_4784153096 [label="C"];
+op_FusedElementwise34 [label="FusedElementwise34
+FusedElementwise
+", shape=box];
+var_4784153096 -> op_FusedElementwise34 [label="x0"];
+var_4784134688 [
+label="ConstantVariable67
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4784134688 -> op_FusedElementwise34 [label="x1"];
+var_4783849312 [
+label="Variable89
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise34 -> var_4783849312 [label="y"];
+op_Sgemm17 [label="Sgemm17
+Sgemm
+M=784
+N=512
+K=128
+out_shape=[1, 28, 28, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783849312 -> op_Sgemm17 [label="A"];
+var_4788162064 [
+label="ConstantVariable416
+(128, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4788162064 -> op_Sgemm17 [label="B"];
+var_4783846792 [
+label="Variable91
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm17 -> var_4783846792 [label="C"];
+op_FusedElementwise33 [label="FusedElementwise33
+FusedElementwise
+", shape=box];
+var_4783809032 -> op_FusedElementwise33 [label="x0"];
+var_4783812000 [
+label="ConstantVariable71
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4783812000 -> op_FusedElementwise33 [label="x1"];
+var_4783846792 -> op_FusedElementwise33 [label="x2"];
+var_4784242136 [
+label="Variable95
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise33 -> var_4784242136 [label="y"];
+op_Sgemm18 [label="Sgemm18
+Sgemm
+M=784
+N=128
+K=512
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4784242136 -> op_Sgemm18 [label="A"];
+var_4890956016 [
+label="ConstantVariable419
+(512, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4890956016 -> op_Sgemm18 [label="B"];
+var_4784282200 [
+label="Variable97
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm18 -> var_4784282200 [label="C"];
+op_FusedElementwise32 [label="FusedElementwise32
+FusedElementwise
+", shape=box];
+var_4784302232 [
+label="ConstantVariable75
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4784302232 -> op_FusedElementwise32 [label="x0"];
+var_4784282200 -> op_FusedElementwise32 [label="x1"];
+var_4784336968 [
+label="Variable100
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise32 -> var_4784336968 [label="y"];
+op_Im2Col8 [label="Im2Col8
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4784336968 -> op_Im2Col8 [label="im"];
+var_4782790416 [
+label="Variable340
+(1, 28, 28, 1152)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col8 -> var_4782790416 [label="col"];
+op_Sgemm19 [label="Sgemm19
+Sgemm
+M=784
+N=128
+K=1152
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782790416 -> op_Sgemm19 [label="A"];
+var_4890860848 [
+label="ConstantVariable422
+(1152, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4890860848 -> op_Sgemm19 [label="B"];
+var_4784340104 [
+label="Variable102
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm19 -> var_4784340104 [label="C"];
+op_FusedElementwise31 [label="FusedElementwise31
+FusedElementwise
+", shape=box];
+var_4784340104 -> op_FusedElementwise31 [label="x0"];
+var_4784368328 [
+label="ConstantVariable79
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4784368328 -> op_FusedElementwise31 [label="x1"];
+var_4787991160 [
+label="Variable105
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise31 -> var_4787991160 [label="y"];
+op_Sgemm20 [label="Sgemm20
+Sgemm
+M=784
+N=512
+K=128
+out_shape=[1, 28, 28, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4787991160 -> op_Sgemm20 [label="A"];
+var_4805147056 [
+label="ConstantVariable425
+(128, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4805147056 -> op_Sgemm20 [label="B"];
+var_4787994296 [
+label="Variable107
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm20 -> var_4787994296 [label="C"];
+op_FusedElementwise30 [label="FusedElementwise30
+FusedElementwise
+", shape=box];
+var_4787994296 -> op_FusedElementwise30 [label="x0"];
+var_4784242136 -> op_FusedElementwise30 [label="x1"];
+var_4788026616 [
+label="ConstantVariable83
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4788026616 -> op_FusedElementwise30 [label="x2"];
+var_4788067016 [
+label="Variable111
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise30 -> var_4788067016 [label="y"];
+op_Sgemm21 [label="Sgemm21
+Sgemm
+M=784
+N=128
+K=512
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4788067016 -> op_Sgemm21 [label="A"];
+var_4825238552 [
+label="ConstantVariable362
+(512, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4825238552 -> op_Sgemm21 [label="B"];
+var_4788094792 [
+label="Variable113
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm21 -> var_4788094792 [label="C"];
+op_FusedElementwise29 [label="FusedElementwise29
+FusedElementwise
+", shape=box];
+var_4788118920 [
+label="ConstantVariable87
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4788118920 -> op_FusedElementwise29 [label="x0"];
+var_4788094792 -> op_FusedElementwise29 [label="x1"];
+var_4788120824 [
+label="Variable116
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise29 -> var_4788120824 [label="y"];
+op_Im2Col9 [label="Im2Col9
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4788120824 -> op_Im2Col9 [label="im"];
+var_4782995104 [
+label="Variable344
+(1, 28, 28, 1152)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col9 -> var_4782995104 [label="col"];
+op_Sgemm22 [label="Sgemm22
+Sgemm
+M=784
+N=128
+K=1152
+out_shape=[1, 28, 28, 128]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4782995104 -> op_Sgemm22 [label="A"];
+var_4825306616 [
+label="ConstantVariable359
+(1152, 128)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4825306616 -> op_Sgemm22 [label="B"];
+var_4788160888 [
+label="Variable118
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm22 -> var_4788160888 [label="C"];
+op_FusedElementwise28 [label="FusedElementwise28
+FusedElementwise
+", shape=box];
+var_4788197304 [
+label="ConstantVariable91
+(128,)
+Order=[C]",shape=doubleoctagon];
+var_4788197304 -> op_FusedElementwise28 [label="x0"];
+var_4788160888 -> op_FusedElementwise28 [label="x1"];
+var_4788199208 [
+label="Variable121
+(1, 28, 28, 128)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise28 -> var_4788199208 [label="y"];
+op_Sgemm23 [label="Sgemm23
+Sgemm
+M=784
+N=512
+K=128
+out_shape=[1, 28, 28, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4788199208 -> op_Sgemm23 [label="A"];
+var_4825309136 [
+label="ConstantVariable356
+(128, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4825309136 -> op_Sgemm23 [label="B"];
+var_4788226984 [
+label="Variable123
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm23 -> var_4788226984 [label="C"];
+op_FusedElementwise27 [label="FusedElementwise27
+FusedElementwise
+", shape=box];
+var_4788226984 -> op_FusedElementwise27 [label="x0"];
+var_4788067016 -> op_FusedElementwise27 [label="x1"];
+var_4805036520 [
+label="ConstantVariable95
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4805036520 -> op_FusedElementwise27 [label="x2"];
+var_4805068728 [
+label="Variable127
+(1, 28, 28, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise27 -> var_4805068728 [label="y"];
+op_Im2Col12 [label="Im2Col12
+Im2Col
+ksize=(1, 1)
+stride=(2, 2)
+padding=(0, 0)
+dilation_rate=(1, 1)", shape=box];
+var_4805068728 -> op_Im2Col12 [label="im"];
+var_4783018616 [
+label="Variable352
+(1, 14, 14, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col12 -> var_4783018616 [label="col"];
+op_Sgemm27 [label="Sgemm27
+Sgemm
+M=196
+N=1024
+K=512
+out_shape=[1, 14, 14, 1024]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783018616 -> op_Sgemm27 [label="A"];
+var_4825352008 [
+label="ConstantVariable353
+(512, 1024)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4825352008 -> op_Sgemm27 [label="B"];
+var_4825235864 [
+label="Variable139
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm27 -> var_4825235864 [label="C"];
+op_Sgemm24 [label="Sgemm24
+Sgemm
+M=196
+N=256
+K=512
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4890907032 [
+label="ConstantVariable428
+(512, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4890907032 -> op_Sgemm24 [label="B"];
+var_4783018616 -> op_Sgemm24 [label="A"];
+var_4805104696 [
+label="Variable129
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm24 -> var_4805104696 [label="C"];
+op_FusedElementwise26 [label="FusedElementwise26
+FusedElementwise
+", shape=box];
+var_4805104696 -> op_FusedElementwise26 [label="x0"];
+var_4805105144 [
+label="ConstantVariable99
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4805105144 -> op_FusedElementwise26 [label="x1"];
+var_4805144928 [
+label="Variable132
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise26 -> var_4805144928 [label="y"];
+op_Im2Col11 [label="Im2Col11
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4805144928 -> op_Im2Col11 [label="im"];
+var_4783018504 [
+label="Variable349
+(1, 14, 14, 2304)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col11 -> var_4783018504 [label="col"];
+op_Sgemm25 [label="Sgemm25
+Sgemm
+M=196
+N=256
+K=2304
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783018504 -> op_Sgemm25 [label="A"];
+var_4805218200 [
+label="ConstantVariable431
+(2304, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4805218200 -> op_Sgemm25 [label="B"];
+var_4805146552 [
+label="Variable134
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm25 -> var_4805146552 [label="C"];
+op_FusedElementwise25 [label="FusedElementwise25
+FusedElementwise
+", shape=box];
+var_4805147392 [
+label="ConstantVariable103
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4805147392 -> op_FusedElementwise25 [label="x0"];
+var_4805146552 -> op_FusedElementwise25 [label="x1"];
+var_4805215736 [
+label="Variable137
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise25 -> var_4805215736 [label="y"];
+op_Sgemm26 [label="Sgemm26
+Sgemm
+M=196
+N=1024
+K=256
+out_shape=[1, 14, 14, 1024]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4805215736 -> op_Sgemm26 [label="A"];
+var_4890747904 [
+label="ConstantVariable434
+(256, 1024)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4890747904 -> op_Sgemm26 [label="B"];
+var_4805217360 [
+label="Variable141
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm26 -> var_4805217360 [label="C"];
+op_FusedElementwise24 [label="FusedElementwise24
+FusedElementwise
+", shape=box];
+var_4825235864 -> op_FusedElementwise24 [label="x0"];
+var_4782894272 [
+label="ConstantVariable225
+(1024,)
+Order=[C]",shape=doubleoctagon];
+var_4782894272 -> op_FusedElementwise24 [label="x1"];
+var_4805217360 -> op_FusedElementwise24 [label="x2"];
+var_4825236816 [
+label="Variable147
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise24 -> var_4825236816 [label="y"];
+op_Sgemm28 [label="Sgemm28
+Sgemm
+M=196
+N=256
+K=1024
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4825236816 -> op_Sgemm28 [label="A"];
+var_4825404696 [
+label="ConstantVariable350
+(1024, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4825404696 -> op_Sgemm28 [label="B"];
+var_4825239504 [
+label="Variable149
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm28 -> var_4825239504 [label="C"];
+op_FusedElementwise23 [label="FusedElementwise23
+FusedElementwise
+", shape=box];
+var_4825305888 [
+label="ConstantVariable115
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4825305888 -> op_FusedElementwise23 [label="x0"];
+var_4825239504 -> op_FusedElementwise23 [label="x1"];
+var_4825308688 [
+label="Variable152
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise23 -> var_4825308688 [label="y"];
+op_Im2Col13 [label="Im2Col13
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4825308688 -> op_Im2Col13 [label="im"];
+var_4783020408 [
+label="Variable355
+(1, 14, 14, 2304)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col13 -> var_4783020408 [label="col"];
+op_Sgemm29 [label="Sgemm29
+Sgemm
+M=196
+N=256
+K=2304
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783020408 -> op_Sgemm29 [label="A"];
+var_4825466528 [
+label="ConstantVariable347
+(2304, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4825466528 -> op_Sgemm29 [label="B"];
+var_4825351336 [
+label="Variable154
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm29 -> var_4825351336 [label="C"];
+op_FusedElementwise22 [label="FusedElementwise22
+FusedElementwise
+", shape=box];
+var_4825351336 -> op_FusedElementwise22 [label="x0"];
+var_4825352176 [
+label="ConstantVariable119
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4825352176 -> op_FusedElementwise22 [label="x1"];
+var_4825404136 [
+label="Variable157
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise22 -> var_4825404136 [label="y"];
+op_Sgemm30 [label="Sgemm30
+Sgemm
+M=196
+N=1024
+K=256
+out_shape=[1, 14, 14, 1024]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4825404136 -> op_Sgemm30 [label="A"];
+var_4826551800 [
+label="ConstantVariable344
+(256, 1024)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4826551800 -> op_Sgemm30 [label="B"];
+var_4825405760 [
+label="Variable159
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm30 -> var_4825405760 [label="C"];
+op_FusedElementwise21 [label="FusedElementwise21
+FusedElementwise
+", shape=box];
+var_4825465240 [
+label="ConstantVariable123
+(1024,)
+Order=[C]",shape=doubleoctagon];
+var_4825465240 -> op_FusedElementwise21 [label="x0"];
+var_4825405760 -> op_FusedElementwise21 [label="x1"];
+var_4825236816 -> op_FusedElementwise21 [label="x2"];
+var_4825467760 [
+label="Variable163
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise21 -> var_4825467760 [label="y"];
+op_Sgemm31 [label="Sgemm31
+Sgemm
+M=196
+N=256
+K=1024
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4825467760 -> op_Sgemm31 [label="A"];
+var_4911291080 [
+label="ConstantVariable341
+(1024, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911291080 -> op_Sgemm31 [label="B"];
+var_4826667160 [
+label="Variable165
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm31 -> var_4826667160 [label="C"];
+op_FusedElementwise20 [label="FusedElementwise20
+FusedElementwise
+", shape=box];
+var_4826667160 -> op_FusedElementwise20 [label="x0"];
+var_4826666096 [
+label="ConstantVariable127
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4826666096 -> op_FusedElementwise20 [label="x1"];
+var_4826665816 [
+label="Variable168
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise20 -> var_4826665816 [label="y"];
+op_Im2Col14 [label="Im2Col14
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4826665816 -> op_Im2Col14 [label="im"];
+var_4783273128 [
+label="Variable359
+(1, 14, 14, 2304)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col14 -> var_4783273128 [label="col"];
+op_Sgemm32 [label="Sgemm32
+Sgemm
+M=196
+N=256
+K=2304
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783273128 -> op_Sgemm32 [label="A"];
+var_4911292368 [
+label="ConstantVariable338
+(2304, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911292368 -> op_Sgemm32 [label="B"];
+var_4826613016 [
+label="Variable170
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm32 -> var_4826613016 [label="C"];
+op_FusedElementwise19 [label="FusedElementwise19
+FusedElementwise
+", shape=box];
+var_4826613016 -> op_FusedElementwise19 [label="x0"];
+var_4826614248 [
+label="ConstantVariable131
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4826614248 -> op_FusedElementwise19 [label="x1"];
+var_4826611896 [
+label="Variable173
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise19 -> var_4826611896 [label="y"];
+op_Sgemm33 [label="Sgemm33
+Sgemm
+M=196
+N=1024
+K=256
+out_shape=[1, 14, 14, 1024]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4826611896 -> op_Sgemm33 [label="A"];
+var_4911291248 [
+label="ConstantVariable335
+(256, 1024)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911291248 -> op_Sgemm33 [label="B"];
+var_4826552920 [
+label="Variable175
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm33 -> var_4826552920 [label="C"];
+op_FusedElementwise18 [label="FusedElementwise18
+FusedElementwise
+", shape=box];
+var_4826550792 [
+label="ConstantVariable135
+(1024,)
+Order=[C]",shape=doubleoctagon];
+var_4826550792 -> op_FusedElementwise18 [label="x0"];
+var_4826552920 -> op_FusedElementwise18 [label="x1"];
+var_4825467760 -> op_FusedElementwise18 [label="x2"];
+var_4826550624 [
+label="Variable179
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise18 -> var_4826550624 [label="y"];
+op_Sgemm34 [label="Sgemm34
+Sgemm
+M=196
+N=256
+K=1024
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4826550624 -> op_Sgemm34 [label="A"];
+var_4911291752 [
+label="ConstantVariable332
+(1024, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911291752 -> op_Sgemm34 [label="B"];
+var_4826614192 [
+label="Variable181
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm34 -> var_4826614192 [label="C"];
+op_FusedElementwise17 [label="FusedElementwise17
+FusedElementwise
+", shape=box];
+var_4826614192 -> op_FusedElementwise17 [label="x0"];
+var_4826723664 [
+label="ConstantVariable139
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4826723664 -> op_FusedElementwise17 [label="x1"];
+var_4826725344 [
+label="Variable184
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise17 -> var_4826725344 [label="y"];
+op_Im2Col15 [label="Im2Col15
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4826725344 -> op_Im2Col15 [label="im"];
+var_4783274304 [
+label="Variable363
+(1, 14, 14, 2304)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col15 -> var_4783274304 [label="col"];
+op_Sgemm35 [label="Sgemm35
+Sgemm
+M=196
+N=256
+K=2304
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783274304 -> op_Sgemm35 [label="A"];
+var_4911290016 [
+label="ConstantVariable329
+(2304, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911290016 -> op_Sgemm35 [label="B"];
+var_4826608248 [
+label="Variable186
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm35 -> var_4826608248 [label="C"];
+op_FusedElementwise16 [label="FusedElementwise16
+FusedElementwise
+", shape=box];
+var_4826609088 [
+label="ConstantVariable143
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4826609088 -> op_FusedElementwise16 [label="x0"];
+var_4826608248 -> op_FusedElementwise16 [label="x1"];
+var_4886200504 [
+label="Variable189
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise16 -> var_4886200504 [label="y"];
+op_Sgemm36 [label="Sgemm36
+Sgemm
+M=196
+N=1024
+K=256
+out_shape=[1, 14, 14, 1024]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4886200504 -> op_Sgemm36 [label="A"];
+var_4911290520 [
+label="ConstantVariable326
+(256, 1024)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911290520 -> op_Sgemm36 [label="B"];
+var_4886202128 [
+label="Variable191
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm36 -> var_4886202128 [label="C"];
+op_FusedElementwise15 [label="FusedElementwise15
+FusedElementwise
+", shape=box];
+var_4886202128 -> op_FusedElementwise15 [label="x0"];
+var_4886202968 [
+label="ConstantVariable147
+(1024,)
+Order=[C]",shape=doubleoctagon];
+var_4886202968 -> op_FusedElementwise15 [label="x1"];
+var_4826550624 -> op_FusedElementwise15 [label="x2"];
+var_4886247744 [
+label="Variable195
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise15 -> var_4886247744 [label="y"];
+op_Sgemm37 [label="Sgemm37
+Sgemm
+M=196
+N=256
+K=1024
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4886247744 -> op_Sgemm37 [label="A"];
+var_4911289512 [
+label="ConstantVariable323
+(1024, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911289512 -> op_Sgemm37 [label="B"];
+var_4886249368 [
+label="Variable197
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm37 -> var_4886249368 [label="C"];
+op_FusedElementwise14 [label="FusedElementwise14
+FusedElementwise
+", shape=box];
+var_4886249368 -> op_FusedElementwise14 [label="x0"];
+var_4886291176 [
+label="ConstantVariable151
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4886291176 -> op_FusedElementwise14 [label="x1"];
+var_4886293976 [
+label="Variable200
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise14 -> var_4886293976 [label="y"];
+op_Im2Col16 [label="Im2Col16
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4886293976 -> op_Im2Col16 [label="im"];
+var_4783313976 [
+label="Variable367
+(1, 14, 14, 2304)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col16 -> var_4783313976 [label="col"];
+op_Sgemm38 [label="Sgemm38
+Sgemm
+M=196
+N=256
+K=2304
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783313976 -> op_Sgemm38 [label="A"];
+var_4911288392 [
+label="ConstantVariable320
+(2304, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911288392 -> op_Sgemm38 [label="B"];
+var_4886353008 [
+label="Variable202
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm38 -> var_4886353008 [label="C"];
+op_FusedElementwise13 [label="FusedElementwise13
+FusedElementwise
+", shape=box];
+var_4886353848 [
+label="ConstantVariable155
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4886353848 -> op_FusedElementwise13 [label="x0"];
+var_4886353008 -> op_FusedElementwise13 [label="x1"];
+var_4890481328 [
+label="Variable205
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise13 -> var_4890481328 [label="y"];
+op_Sgemm39 [label="Sgemm39
+Sgemm
+M=196
+N=1024
+K=256
+out_shape=[1, 14, 14, 1024]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4890481328 -> op_Sgemm39 [label="A"];
+var_4911288840 [
+label="ConstantVariable317
+(256, 1024)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911288840 -> op_Sgemm39 [label="B"];
+var_4890482952 [
+label="Variable207
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm39 -> var_4890482952 [label="C"];
+op_FusedElementwise12 [label="FusedElementwise12
+FusedElementwise
+", shape=box];
+var_4890482952 -> op_FusedElementwise12 [label="x0"];
+var_4886247744 -> op_FusedElementwise12 [label="x1"];
+var_4890530144 [
+label="ConstantVariable159
+(1024,)
+Order=[C]",shape=doubleoctagon];
+var_4890530144 -> op_FusedElementwise12 [label="x2"];
+var_4890532664 [
+label="Variable211
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise12 -> var_4890532664 [label="y"];
+op_Sgemm40 [label="Sgemm40
+Sgemm
+M=196
+N=256
+K=1024
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4890532664 -> op_Sgemm40 [label="A"];
+var_4911289064 [
+label="ConstantVariable314
+(1024, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911289064 -> op_Sgemm40 [label="B"];
+var_4890583504 [
+label="Variable213
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm40 -> var_4890583504 [label="C"];
+op_FusedElementwise11 [label="FusedElementwise11
+FusedElementwise
+", shape=box];
+var_4890584344 [
+label="ConstantVariable163
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4890584344 -> op_FusedElementwise11 [label="x0"];
+var_4890583504 -> op_FusedElementwise11 [label="x1"];
+var_4890587088 [
+label="Variable216
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise11 -> var_4890587088 [label="y"];
+op_Im2Col17 [label="Im2Col17
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4890587088 -> op_Im2Col17 [label="im"];
+var_4783598728 [
+label="Variable371
+(1, 14, 14, 2304)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col17 -> var_4783598728 [label="col"];
+op_Sgemm41 [label="Sgemm41
+Sgemm
+M=196
+N=256
+K=2304
+out_shape=[1, 14, 14, 256]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783598728 -> op_Sgemm41 [label="A"];
+var_4911289232 [
+label="ConstantVariable311
+(2304, 256)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911289232 -> op_Sgemm41 [label="B"];
+var_4890642024 [
+label="Variable218
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm41 -> var_4890642024 [label="C"];
+op_FusedElementwise10 [label="FusedElementwise10
+FusedElementwise
+", shape=box];
+var_4890642864 [
+label="ConstantVariable167
+(256,)
+Order=[C]",shape=doubleoctagon];
+var_4890642864 -> op_FusedElementwise10 [label="x0"];
+var_4890642024 -> op_FusedElementwise10 [label="x1"];
+var_4890686632 [
+label="Variable221
+(1, 14, 14, 256)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise10 -> var_4890686632 [label="y"];
+op_Sgemm42 [label="Sgemm42
+Sgemm
+M=196
+N=1024
+K=256
+out_shape=[1, 14, 14, 1024]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4890686632 -> op_Sgemm42 [label="A"];
+var_4911289568 [
+label="ConstantVariable308
+(256, 1024)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911289568 -> op_Sgemm42 [label="B"];
+var_4890688256 [
+label="Variable223
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm42 -> var_4890688256 [label="C"];
+op_FusedElementwise9 [label="FusedElementwise9
+FusedElementwise
+", shape=box];
+var_4890688256 -> op_FusedElementwise9 [label="x0"];
+var_4890532664 -> op_FusedElementwise9 [label="x1"];
+var_4890747736 [
+label="ConstantVariable171
+(1024,)
+Order=[C]",shape=doubleoctagon];
+var_4890747736 -> op_FusedElementwise9 [label="x2"];
+var_4890750256 [
+label="Variable227
+(1, 14, 14, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise9 -> var_4890750256 [label="y"];
+op_Im2Col20 [label="Im2Col20
+Im2Col
+ksize=(1, 1)
+stride=(2, 2)
+padding=(0, 0)
+dilation_rate=(1, 1)", shape=box];
+var_4890750256 -> op_Im2Col20 [label="im"];
+var_4784241016 [
+label="Variable379
+(1, 7, 7, 1024)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col20 -> var_4784241016 [label="col"];
+op_Sgemm46 [label="Sgemm46
+Sgemm
+M=49
+N=2048
+K=1024
+out_shape=[1, 7, 7, 2048]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4784241016 -> op_Sgemm46 [label="A"];
+var_4911288728 [
+label="ConstantVariable305
+(1024, 2048)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911288728 -> op_Sgemm46 [label="B"];
+var_4890797000 [
+label="Variable239
+(1, 7, 7, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm46 -> var_4890797000 [label="C"];
+op_Sgemm43 [label="Sgemm43
+Sgemm
+M=49
+N=512
+K=1024
+out_shape=[1, 7, 7, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4890689152 [
+label="ConstantVariable437
+(1024, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4890689152 -> op_Sgemm43 [label="B"];
+var_4784241016 -> op_Sgemm43 [label="A"];
+var_4890958088 [
+label="Variable229
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm43 -> var_4890958088 [label="C"];
+op_FusedElementwise8 [label="FusedElementwise8
+FusedElementwise
+", shape=box];
+var_4890958088 -> op_FusedElementwise8 [label="x0"];
+var_4890959320 [
+label="ConstantVariable175
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4890959320 -> op_FusedElementwise8 [label="x1"];
+var_4890956912 [
+label="Variable232
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise8 -> var_4890956912 [label="y"];
+op_Im2Col19 [label="Im2Col19
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4890956912 -> op_Im2Col19 [label="im"];
+var_4783808864 [
+label="Variable376
+(1, 7, 7, 4608)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col19 -> var_4783808864 [label="col"];
+op_Sgemm44 [label="Sgemm44
+Sgemm
+M=49
+N=512
+K=4608
+out_shape=[1, 7, 7, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4783808864 -> op_Sgemm44 [label="A"];
+var_4825239056 [
+label="ConstantVariable440
+(4608, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4825239056 -> op_Sgemm44 [label="B"];
+var_4890908208 [
+label="Variable234
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm44 -> var_4890908208 [label="C"];
+op_FusedElementwise7 [label="FusedElementwise7
+FusedElementwise
+", shape=box];
+var_4890909440 [
+label="ConstantVariable179
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4890909440 -> op_FusedElementwise7 [label="x0"];
+var_4890908208 -> op_FusedElementwise7 [label="x1"];
+var_4890907088 [
+label="Variable237
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise7 -> var_4890907088 [label="y"];
+op_Sgemm45 [label="Sgemm45
+Sgemm
+M=49
+N=2048
+K=512
+out_shape=[1, 7, 7, 2048]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4890907088 -> op_Sgemm45 [label="A"];
+var_4890688760 [
+label="ConstantVariable443
+(512, 2048)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4890688760 -> op_Sgemm45 [label="B"];
+var_4890858552 [
+label="Variable241
+(1, 7, 7, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm45 -> var_4890858552 [label="C"];
+op_FusedElementwise6 [label="FusedElementwise6
+FusedElementwise
+", shape=box];
+var_4890858552 -> op_FusedElementwise6 [label="x0"];
+var_4782870712 [
+label="ConstantVariable222
+(2048,)
+Order=[C]",shape=doubleoctagon];
+var_4782870712 -> op_FusedElementwise6 [label="x1"];
+var_4890797000 -> op_FusedElementwise6 [label="x2"];
+var_4890860680 [
+label="Variable247
+(1, 7, 7, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise6 -> var_4890860680 [label="y"];
+op_Sgemm47 [label="Sgemm47
+Sgemm
+M=49
+N=512
+K=2048
+out_shape=[1, 7, 7, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4890860680 -> op_Sgemm47 [label="A"];
+var_4911239120 [
+label="ConstantVariable302
+(2048, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911239120 -> op_Sgemm47 [label="B"];
+var_4890956408 [
+label="Variable249
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm47 -> var_4890956408 [label="C"];
+op_FusedElementwise5 [label="FusedElementwise5
+FusedElementwise
+", shape=box];
+var_4891015376 [
+label="ConstantVariable191
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4891015376 -> op_FusedElementwise5 [label="x0"];
+var_4890956408 -> op_FusedElementwise5 [label="x1"];
+var_4891016888 [
+label="Variable252
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise5 -> var_4891016888 [label="y"];
+op_Im2Col21 [label="Im2Col21
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4891016888 -> op_Im2Col21 [label="im"];
+var_4784240960 [
+label="Variable382
+(1, 7, 7, 4608)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col21 -> var_4784240960 [label="col"];
+op_Sgemm48 [label="Sgemm48
+Sgemm
+M=49
+N=512
+K=4608
+out_shape=[1, 7, 7, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4784240960 -> op_Sgemm48 [label="A"];
+var_4911238504 [
+label="ConstantVariable299
+(4608, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911238504 -> op_Sgemm48 [label="B"];
+var_4891161936 [
+label="Variable254
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm48 -> var_4891161936 [label="C"];
+op_FusedElementwise4 [label="FusedElementwise4
+FusedElementwise
+", shape=box];
+var_4891162776 [
+label="ConstantVariable195
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4891162776 -> op_FusedElementwise4 [label="x0"];
+var_4891161936 -> op_FusedElementwise4 [label="x1"];
+var_4891190160 [
+label="Variable257
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise4 -> var_4891190160 [label="y"];
+op_Sgemm49 [label="Sgemm49
+Sgemm
+M=49
+N=2048
+K=512
+out_shape=[1, 7, 7, 2048]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4891190160 -> op_Sgemm49 [label="A"];
+var_4911238560 [
+label="ConstantVariable296
+(512, 2048)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911238560 -> op_Sgemm49 [label="B"];
+var_4891191784 [
+label="Variable259
+(1, 7, 7, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm49 -> var_4891191784 [label="C"];
+op_FusedElementwise3 [label="FusedElementwise3
+FusedElementwise
+", shape=box];
+var_4890860680 -> op_FusedElementwise3 [label="x0"];
+var_4911235648 [
+label="ConstantVariable199
+(2048,)
+Order=[C]",shape=doubleoctagon];
+var_4911235648 -> op_FusedElementwise3 [label="x1"];
+var_4891191784 -> op_FusedElementwise3 [label="x2"];
+var_4911238168 [
+label="Variable263
+(1, 7, 7, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise3 -> var_4911238168 [label="y"];
+op_Sgemm50 [label="Sgemm50
+Sgemm
+M=49
+N=512
+K=2048
+out_shape=[1, 7, 7, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4911238168 -> op_Sgemm50 [label="A"];
+var_4911236712 [
+label="ConstantVariable293
+(2048, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911236712 -> op_Sgemm50 [label="B"];
+var_4911289008 [
+label="Variable265
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm50 -> var_4911289008 [label="C"];
+op_FusedElementwise2 [label="FusedElementwise2
+FusedElementwise
+", shape=box];
+var_4911289008 -> op_FusedElementwise2 [label="x0"];
+var_4911289848 [
+label="ConstantVariable203
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4911289848 -> op_FusedElementwise2 [label="x1"];
+var_4911337712 [
+label="Variable268
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise2 -> var_4911337712 [label="y"];
+op_Im2Col22 [label="Im2Col22
+Im2Col
+ksize=(3, 3)
+stride=(1, 1)
+padding=(1, 1)
+dilation_rate=(1, 1)", shape=box];
+var_4911337712 -> op_Im2Col22 [label="im"];
+var_4784280464 [
+label="Variable386
+(1, 7, 7, 4608)
+Order=[N, H, W, C]",shape=octagon];
+op_Im2Col22 -> var_4784280464 [label="col"];
+op_Sgemm51 [label="Sgemm51
+Sgemm
+M=49
+N=512
+K=4608
+out_shape=[1, 7, 7, 512]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4784280464 -> op_Sgemm51 [label="A"];
+var_4911237944 [
+label="ConstantVariable290
+(4608, 512)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911237944 -> op_Sgemm51 [label="B"];
+var_4911339336 [
+label="Variable270
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm51 -> var_4911339336 [label="C"];
+op_FusedElementwise1 [label="FusedElementwise1
+FusedElementwise
+", shape=box];
+var_4911340176 [
+label="ConstantVariable207
+(512,)
+Order=[C]",shape=doubleoctagon];
+var_4911340176 -> op_FusedElementwise1 [label="x0"];
+var_4911339336 -> op_FusedElementwise1 [label="x1"];
+var_4911388040 [
+label="Variable273
+(1, 7, 7, 512)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise1 -> var_4911388040 [label="y"];
+op_Sgemm52 [label="Sgemm52
+Sgemm
+M=49
+N=2048
+K=512
+out_shape=[1, 7, 7, 2048]
+out_order=[N, H, W, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4911388040 -> op_Sgemm52 [label="A"];
+var_4911237160 [
+label="ConstantVariable287
+(512, 2048)
+Order=[AxisK, C]",shape=doubleoctagon];
+var_4911237160 -> op_Sgemm52 [label="B"];
+var_4911389664 [
+label="Variable275
+(1, 7, 7, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_Sgemm52 -> var_4911389664 [label="C"];
+op_FusedElementwise0 [label="FusedElementwise0
+FusedElementwise
+", shape=box];
+var_4911238168 -> op_FusedElementwise0 [label="x0"];
+var_4911445048 [
+label="ConstantVariable211
+(2048,)
+Order=[C]",shape=doubleoctagon];
+var_4911445048 -> op_FusedElementwise0 [label="x1"];
+var_4911389664 -> op_FusedElementwise0 [label="x2"];
+var_4911447568 [
+label="Variable279
+(1, 7, 7, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_FusedElementwise0 -> var_4911447568 [label="y"];
+op_AveragePooling2D0 [label="AveragePooling2D0
+AveragePooling2D
+ksize=(7, 7)
+stride=(7, 7)
+padding=(0, 0)", shape=box];
+var_4911447568 -> op_AveragePooling2D0 [label="x"];
+var_4816626128 [
+label="Variable280
+(1, 1, 1, 2048)
+Order=[N, H, W, C]",shape=octagon];
+op_AveragePooling2D0 -> var_4816626128 [label="y"];
+op_Reshape0 [label="Reshape0
+Reshape
+in_order=[N, H, W, C]
+out_order=[N, C]
+out_shape=[1, 2048]", shape=box];
+var_4816626128 -> op_Reshape0 [label="x"];
+var_4816626856 [
+label="Variable281
+(1, 2048)
+Order=[N, C]",shape=octagon];
+op_Reshape0 -> var_4816626856 [label="y"];
+op_Sgemm53 [label="Sgemm53
+Sgemm
+M=1
+N=1000
+K=2048
+out_shape=(1, 1000)
+out_order=[N, C]
+transpose_A=True
+transpose_B=True", shape=box];
+var_4816626856 -> op_Sgemm53 [label="A"];
+var_4816627416 [
+label="ConstantVariable212
+(2048, 1000)
+Order=[C, N]",shape=doubleoctagon];
+var_4816627416 -> op_Sgemm53 [label="B"];
+var_4816627080 [
+label="Variable282
+(1, 1000)
+Order=[N, C]",shape=octagon];
+op_Sgemm53 -> var_4816627080 [label="C"];
+op_ElementwiseAdd122 [label="ElementwiseAdd122
+ElementwiseAdd
+", shape=box];
+var_4816627080 -> op_ElementwiseAdd122 [label="x0"];
+var_4816628256 [
+label="ConstantVariable213
+(1000,)
+Order=[C]",shape=doubleoctagon];
+var_4816628256 -> op_ElementwiseAdd122 [label="x1"];
+var_4816627360 [
+label="Variable283
+(1, 1000)
+Order=[N, C]",shape=octagon];
+op_ElementwiseAdd122 -> var_4816627360 [label="y"];
+op_Softmax0 [label="Softmax0
+Softmax
+axis=<Axis C>", shape=box];
+var_4816627360 -> op_Softmax0 [label="x"];
+var_4816629208 [
+label="Variable284
+(1, 1000)
+Order=[N, C]",shape=octagon,style="bold"];
+op_Softmax0 -> var_4816629208 [label="y"];
+}

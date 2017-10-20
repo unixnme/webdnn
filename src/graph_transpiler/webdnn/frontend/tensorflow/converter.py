@@ -90,8 +90,8 @@ class TensorFlowConverter(Converter["tf.Operation"]):
         ops = _listup_operations(inputs, outputs)
         for op in ops:
             self._convert_operator(op)
-            sub_graph = Graph([self.get_variable(tf_tensor) for tf_tensor in op.inputs],
-                              [self.get_variable(tf_tensor) for tf_tensor in op.outputs])
+            sub_graph = Graph([self.get_variable(tf_tensor) for tf_tensor in op.inputs if self.has_variable(tf_tensor)],
+                              [self.get_variable(tf_tensor) for tf_tensor in op.outputs if self.has_variable(tf_tensor)])
 
             # Constant folding improves possibility of conversion, because many tensors are used not only for main input variable but also
             # for other parameter like indices of operation, and WebDNN doesn't support dynamic indices operation.
@@ -190,9 +190,12 @@ def _listup_operations(inputs, outputs):
                 result.append(node)
 
         else:
-            # TensorFlow allows cyclic graph (like RNN), but WebDNN doesn't.
-            if any(n in stack for n in unresolved_prevs):
-                raise CyclicGraphError('[TensorFlowConverter] Cyclic graph is detected.')
+            # # TensorFlow allows cyclic graph (like RNN), but WebDNN doesn't.
+            # if all(n in stack for n in unresolved_prevs):
+            #     print(node)
+            #     print("unresolved_prevs")
+            #     print(unresolved_prevs)
+            #     raise CyclicGraphError('[TensorFlowConverter] Cyclic graph is detected.')
 
             stack.append(node)
             stack += unresolved_prevs

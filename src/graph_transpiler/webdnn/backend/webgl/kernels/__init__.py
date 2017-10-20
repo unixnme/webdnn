@@ -28,6 +28,7 @@ from webdnn.backend.webgl.kernels import reduce
 from webdnn.backend.webgl.kernels import reinterpret_axis
 from webdnn.backend.webgl.kernels import relu
 from webdnn.backend.webgl.kernels import reshape
+from webdnn.backend.webgl.kernels import resize_2d
 from webdnn.backend.webgl.kernels import rsqrt
 from webdnn.backend.webgl.kernels import scalar_add
 from webdnn.backend.webgl.kernels import scalar_affine

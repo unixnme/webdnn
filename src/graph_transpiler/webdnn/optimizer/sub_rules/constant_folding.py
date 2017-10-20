@@ -15,7 +15,6 @@ class ConstantFolding(OptimizeRule):
 
     def flags(self):
         return [
-            flags.optimize.OPTIMIZE,
             flags.optimize.CONSTANT_FOLDING
         ]
 

@@ -1,15 +1,17 @@
+from webdnn.frontend.keras.converter import KerasConverter
+from webdnn.frontend.keras.layers.util import do_activation
+from webdnn.graph.axis import Axis
+from webdnn.graph.operators.convolution2d import Convolution2D
+from webdnn.graph.operators.deconvolution2d import Deconvolution2D
+from webdnn.graph.operators.resize_2d import Resize2D
+from webdnn.graph.operators.zero_padding_1d import ZeroPadding1D
+from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
+from webdnn.graph.order import OrderC, OrderNCHW, OrderNHWC, OrderHWCN, OrderNTC, OrderHWNC
+
 try:
     import keras
 except ImportError as e:
     pass
-
-from webdnn.frontend.keras.converter import KerasConverter
-from webdnn.frontend.keras.layers.util import do_activation
-from webdnn.graph.operators.convolution2d import Convolution2D
-from webdnn.graph.operators.deconvolution2d import Deconvolution2D
-from webdnn.graph.operators.zero_padding_1d import ZeroPadding1D
-from webdnn.graph.operators.zero_padding_2d import ZeroPadding2D
-from webdnn.graph.order import OrderC, OrderNCHW, OrderNHWC, OrderHWCN, OrderNTC, OrderHWNC
 
 
 # noinspection PyUnusedLocal
@@ -163,8 +165,13 @@ def _convert_up_sampling1d(converter: KerasConverter, k_op: "keras.layers.UpSamp
 # noinspection PyUnusedLocal
 @KerasConverter.register_handler("UpSampling2D")
 def _convert_up_sampling2d(converter: KerasConverter, k_op: "keras.layers.UpSampling2D"):
-    # TODO
-    raise NotImplementedError('[KerasConverter] keras.layers.UpSampling2D is not supported')
+    x = converter.get_variable(converter.get_input_tensor(k_op)[0])
+
+    y, = Resize2D(None,
+                  axis1=Axis.H, size1=x.shape_dict[Axis.H] * k_op.size[0],
+                  axis2=Axis.W, size2=x.shape_dict[Axis.W] * k_op.size[1])(x)
+
+    converter.set_variable(converter.get_output_tensor(k_op)[0], y)
 
 
 # noinspection PyUnusedLocal

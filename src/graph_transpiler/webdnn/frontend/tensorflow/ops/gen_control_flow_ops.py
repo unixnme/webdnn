@@ -1,6 +1,10 @@
+import numpy as np
 import tensorflow as tf
 
+from webdnn.frontend.constraints import AxisVar
 from webdnn.frontend.tensorflow.converter import TensorFlowConverter
+from webdnn.graph.order import Order
+from webdnn.graph.variables.constant_variable import ConstantVariable
 
 
 @TensorFlowConverter.register_handler("Abort")
@@ -30,7 +34,15 @@ def loop_cond_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Merge")
 def merge_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    for i, tf_tensor in enumerate(tf_op.inputs):
+        if converter.has_variable(tf_tensor):
+            converter.set_variable(tf_op.outputs[0], converter.get_variable(tf_tensor))
+            # noinspection PyTypeChecker
+            converter.set_variable(tf_op.outputs[1], ConstantVariable(np.array([i], dtype=np.float32), Order([AxisVar()])))
+            break
+
+    else:
+        raise ValueError(f"[TensorFlowConverter] 'Merge' operator is called without any resolved tensor")
 
 
 @TensorFlowConverter.register_handler("NextIteration")
@@ -75,5 +87,14 @@ def ref_switch_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
 
 @TensorFlowConverter.register_handler("Switch")
 def switch_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    tf.cond
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    data = converter.get_variable(tf_op.inputs[0])
+    pred = converter.get_variable(tf_op.inputs[1])
+
+    assert isinstance(pred, ConstantVariable), NotImplementedError(
+        f"[TensorFlowConverter] 'Switch' operator with dynamic condition is not supported.")
+
+    pred = pred.data
+    if pred.flatten()[0]:
+        converter.set_variable(tf_op.outputs[0], data)
+    else:
+        converter.set_variable(tf_op.outputs[1], data)

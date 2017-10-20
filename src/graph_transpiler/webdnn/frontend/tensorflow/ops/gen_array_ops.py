@@ -12,7 +12,6 @@ from webdnn.graph.axis import Axis, AxisKeyDict
 from webdnn.graph.operators.concat import Concat
 from webdnn.graph.operators.depth2space import Depth2Space
 from webdnn.graph.operators.embedding import Embedding
-from webdnn.graph.operators.reinterpret_axis import ReinterpretAxis
 from webdnn.graph.operators.reshape import Reshape
 from webdnn.graph.operators.slice import Slice
 from webdnn.graph.operators.space2depth import Space2Depth
@@ -273,7 +272,33 @@ def matrix_set_diag_handler(converter: TensorFlowConverter, tf_op: "tf.Operation
 
 @TensorFlowConverter.register_handler("MirrorPad")
 def mirror_pad_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
-    raise NotImplementedError(f"[TensorFlowConverter] {tf_op.type} is not supported yet.")
+    x = converter.get_variable(tf_op.inputs[0])
+    pad = converter.get_variable(tf_op.inputs[1])
+
+    assert isinstance(pad, ConstantVariable) and pad.ndim == 2 and pad.shape[0] == x.ndim and pad.shape[1] == 2
+    pad = pad.data.astype(int).tolist()  # type: List[List[int]]
+    n_pad_dim = len(list(filter(lambda p: p[0] > 0 or p[1] > 0, pad)))
+
+    if n_pad_dim == 0:
+        # no padding is needed
+        y = x
+
+    elif n_pad_dim == 1:
+        unify_order(x.order, OrderNTC)  # FIXME
+        pad = tuple(pad[1])
+        y, = ZeroPadding1D(None, padding=pad)(x)
+
+    elif n_pad_dim == 2:
+        unify_order(x.order, OrderNHWC)  # FIXME
+        pad = pad[1:3]
+        assert all(p[0] == p[1] for p in pad), "[TensorFlowConverter] Uneven padding is not supported yet"
+        pad = tuple([p[0] for p in pad])
+        y, = ZeroPadding2D(None, padding=pad)(x)
+
+    else:
+        raise NotImplementedError("[TensorFlowConverter] Only 1D or 2D padding is supported")
+
+    converter.set_variable(tf_op.outputs[0], y)
 
 
 @TensorFlowConverter.register_handler("MirrorPadGrad")
@@ -376,7 +401,7 @@ def placeholder_handler(converter: TensorFlowConverter, tf_op: "tf.Operation"):
     assert all(Placeholder.check_resolved(s) for s in shape), UnexpectedAndPleaseReportError(shape)
 
     # noinspection PyTypeChecker
-    converter.set_variable(tf_op.outputs[0], ConstantVariable(np.array(shape), Order([AxisVar for _ in shape])))
+    converter.set_variable(tf_op.outputs[0], ConstantVariable(np.array(shape), Order([AxisVar() for _ in shape])))
 
 
 @TensorFlowConverter.register_handler("PlaceholderV2")
@@ -649,6 +674,13 @@ def strided_slice_handler(converter: TensorFlowConverter, tf_op: "tf.Operation")
             end[d] = x.shape[d]
 
         d += 1
+
+    begin = [v + s if v < 0 else v for s, v in zip(x.shape, begin)]
+    end = [v + s if v < 0 else v for s, v in zip(x.shape, end)]
+
+    console.debug('begin', begin)
+    console.debug('end', end)
+    console.debug('stride', stride)
 
     y, = Slice(None, begin=begin, end=end, stride=stride)(x)
 

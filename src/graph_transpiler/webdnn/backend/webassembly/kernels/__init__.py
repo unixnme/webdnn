@@ -26,6 +26,7 @@ from webdnn.backend.webassembly.kernels import prod
 from webdnn.backend.webassembly.kernels import reinterpret_axis
 from webdnn.backend.webassembly.kernels import relu
 from webdnn.backend.webassembly.kernels import reshape
+from webdnn.backend.webassembly.kernels import resize_2d
 from webdnn.backend.webassembly.kernels import rsqrt
 from webdnn.backend.webassembly.kernels import scalar_add
 from webdnn.backend.webassembly.kernels import scalar_affine
