@@ -18,7 +18,7 @@ var prepare_run = function() {
 
                         log('Initializing and loading model');
                         _context.next = 7;
-                        return WebDNN.load('./output_' + framework_name, {backendOrder: backend_name});
+                        return WebDNN.load('./output', {backendOrder: backend_name});
 
                     case 7:
                         runner = _context.sent;
